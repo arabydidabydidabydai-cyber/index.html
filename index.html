@@ -1,1146 +1,1419 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>VioletBot — Панель управления</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* ── VARIABLES ── */
+/* ════════════════ CSS VARIABLES ════════════════ */
 :root {
-  --v-pink:      #f472b6;
-  --v-rose:      #fb7185;
-  --v-purple:    #a855f7;
-  --v-lavender:  #c084fc;
-  --v-lilac:     #e9d5ff;
-  --v-white:     #faf5ff;
-
-  --grad-main: linear-gradient(135deg, #a855f7 0%, #f472b6 50%, #fb7185 100%);
-  --grad-soft: linear-gradient(135deg, #c084fc22 0%, #f472b622 100%);
-  --grad-card: linear-gradient(145deg, #c084fc18 0%, #f472b610 100%);
+  --pink:    #f472b6;
+  --rose:    #fb7185;
+  --purple:  #a855f7;
+  --lav:     #c084fc;
+  --lilac:   #e9d5ff;
+  --white:   #fdf4ff;
+  --grad:    linear-gradient(135deg, #a855f7 0%, #e879f9 50%, #f472b6 100%);
+  --grad2:   linear-gradient(135deg, #7c3aed, #ec4899);
+  --grad-soft: linear-gradient(135deg,rgba(168,85,247,.12),rgba(244,114,182,.08));
 }
-
 [data-theme="dark"] {
-  --bg:          #0e0812;
-  --bg2:         #150e1c;
-  --bg3:         #1e1528;
-  --surface:     #241a30;
-  --surface2:    #2e2140;
-  --border:      #3d2e52;
-  --text:        #f0e6ff;
-  --text2:       #c9b3e8;
-  --text3:       #8b6aaa;
-  --glow:        rgba(168,85,247,.25);
-  --glow2:       rgba(244,114,182,.15);
-  --shadow:      0 8px 32px rgba(0,0,0,.5);
+  --bg:      #08050d;
+  --bg2:     #100d18;
+  --bg3:     #18122a;
+  --surf:    #1e1630;
+  --surf2:   #261e3a;
+  --surf3:   #2e2446;
+  --border:  #3a2a55;
+  --border2: #4d3a6e;
+  --txt:     #f0e8ff;
+  --txt2:    #c0a8e8;
+  --txt3:    #7a5a9a;
+  --glow:    rgba(168,85,247,.3);
+  --glow2:   rgba(244,114,182,.2);
+  --shadow:  0 8px 40px rgba(0,0,0,.6);
 }
-
 [data-theme="light"] {
-  --bg:          #fdf4ff;
-  --bg2:         #f5e6ff;
-  --bg3:         #ede0ff;
-  --surface:     #ffffff;
-  --surface2:    #f9f0ff;
-  --border:      #dbb8f5;
-  --text:        #1a0c2e;
-  --text2:       #4a2d70;
-  --text3:       #7c5aa8;
-  --glow:        rgba(168,85,247,.15);
-  --glow2:       rgba(244,114,182,.10);
-  --shadow:      0 8px 32px rgba(120,60,200,.12);
+  --bg:      #fdf4ff;
+  --bg2:     #f8ebff;
+  --bg3:     #f0dcff;
+  --surf:    #ffffff;
+  --surf2:   #f9f0ff;
+  --surf3:   #f2e4ff;
+  --border:  #e0c5f8;
+  --border2: #d0a8f0;
+  --txt:     #1a0830;
+  --txt2:    #5a3880;
+  --txt3:    #9070b8;
+  --glow:    rgba(168,85,247,.15);
+  --glow2:   rgba(244,114,182,.12);
+  --shadow:  0 8px 40px rgba(120,60,200,.1);
 }
 
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background .3s, color .3s;
+/* ════════════════ RESET ════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--txt);
+  min-height:100vh;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+.z1{position:relative;z-index:1}
+
+/* ════════════════ AMBIENT ════════════════ */
+.amb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:flt 10s ease-in-out infinite;}
+.amb-a{width:600px;height:600px;background:var(--purple);opacity:.06;top:-150px;right:-150px;}
+.amb-b{width:500px;height:500px;background:var(--pink);opacity:.06;bottom:-100px;left:-100px;animation-delay:4s;}
+.amb-c{width:300px;height:300px;background:var(--rose);opacity:.04;top:40%;left:40%;animation-delay:7s;}
+@keyframes flt{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.06)}}
+
+/* ════════════════ LAYOUT ════════════════ */
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+.flex{display:flex}.flex-col{flex-direction:column}
+.items-center{align-items:center}.justify-between{justify-content:space-between}
+.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-20{gap:20px}.gap-24{gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.mt-24{margin-top:24px}.mt-32{margin-top:32px}.mt-48{margin-top:48px}
+.mb-8{margin-bottom:8px}.mb-16{margin-bottom:16px}.mb-24{margin-bottom:24px}
+.w-full{width:100%}.text-center{text-align:center}
+
+/* ════════════════ TYPOGRAPHY ════════════════ */
+.h1{font-family:'Syne',sans-serif;font-size:clamp(40px,7vw,88px);font-weight:800;line-height:1.02;letter-spacing:-2.5px}
+.h2{font-family:'Syne',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:800;letter-spacing:-1px}
+.h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:700}
+.h4{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+.grad-txt{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.muted{color:var(--txt2)}.muted2{color:var(--txt3)}
+.small{font-size:13px}.xs{font-size:12px}
+code,.mono{font-family:'DM Mono',monospace,monospace;background:var(--surf2);padding:2px 6px;border-radius:6px;font-size:13px;color:var(--lav)}
+
+/* ════════════════ BUTTONS ════════════════ */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .2s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 4px 24px var(--glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 36px var(--glow),0 0 0 1px rgba(255,255,255,.1)}
+.btn-secondary{background:var(--surf2);color:var(--txt);border:1.5px solid var(--border)}
+.btn-secondary:hover{background:var(--surf3);border-color:var(--border2)}
+.btn-ghost{background:transparent;color:var(--txt2);border:1.5px solid transparent}
+.btn-ghost:hover{border-color:var(--border);color:var(--txt)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1.5px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-discord{background:#5865f2;color:#fff;box-shadow:0 4px 20px rgba(88,101,242,.4)}
+.btn-discord:hover{background:#4752c4;transform:translateY(-2px)}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:9px}
+.btn-lg{padding:14px 28px;font-size:16px;border-radius:14px}
+.btn-icon{padding:8px;border-radius:10px;aspect-ratio:1}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ════════════════ CARDS ════════════════ */
+.card{background:var(--surf);border:1.5px solid var(--border);border-radius:20px;padding:24px;transition:all .25s;box-shadow:var(--shadow)}
+.card:hover{border-color:var(--border2);box-shadow:0 16px 56px var(--glow)}
+.card-lift:hover{transform:translateY(-4px)}
+.card-glow{border-color:var(--purple)44;background:var(--grad-soft)}
+.card-icon{width:48px;height:48px;border-radius:14px;background:var(--grad-soft);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;flex-shrink:0}
+
+/* ════════════════ NAV ════════════════ */
+nav{position:sticky;top:0;z-index:200;backdrop-filter:blur(24px) saturate(1.8);background:color-mix(in srgb,var(--bg) 85%,transparent);border-bottom:1px solid var(--border);padding:14px 0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:7px 16px;border-radius:99px;font-size:14px;cursor:pointer;transition:all .2s;background:transparent;border:none;color:var(--txt2);font-family:'DM Sans',sans-serif;font-weight:500}
+.nav-link:hover{background:var(--surf2);color:var(--txt)}
+.nav-link.act{background:var(--surf2);color:var(--lav);border:1px solid var(--border)}
+
+/* ════════════════ THEME TOGGLE ════════════════ */
+.thm{width:52px;height:26px;background:var(--surf2);border:1.5px solid var(--border);border-radius:99px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.thm::after{content:'';width:18px;height:18px;border-radius:50%;background:var(--grad);position:absolute;top:2px;left:2px;transition:transform .3s;box-shadow:0 2px 6px var(--glow)}
+[data-theme="light"] .thm::after{transform:translateX(26px)}
+.thm-icons{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 5px;font-size:10px;pointer-events:none}
+
+/* ════════════════ PAGES ════════════════ */
+.page{display:none;animation:fadeUp .35s ease}
+.page.act{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════ HERO ════════════════ */
+.hero{padding:110px 0 80px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--surf2);border:1.5px solid var(--border);border-radius:99px;padding:6px 16px;font-size:13px;color:var(--txt2);margin-bottom:32px}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--pink);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-desc{font-size:18px;color:var(--txt2);max-width:540px;margin:16px auto 36px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.feature-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:40px 0 64px}
+.pill{display:flex;align-items:center;gap:7px;background:var(--surf);border:1.5px solid var(--border);border-radius:99px;padding:8px 16px;font-size:14px;color:var(--txt2);transition:all .2s;cursor:default}
+.pill:hover{border-color:var(--purple);color:var(--txt);transform:translateY(-2px)}
+
+/* ════════════════ STATS ════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px}
+.stat-box{background:var(--surf2);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:13px;color:var(--txt2);margin-top:4px}
+
+/* ════════════════ SECTION ════════════════ */
+.section{padding:80px 0}
+.section-sub{color:var(--txt2);font-size:16px;margin:8px 0 40px}
+
+/* ════════════════ DIVIDER ════════════════ */
+.divider{height:1px;background:var(--border);margin:48px 0;position:relative}
+.divider::after{content:'✦';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg2);padding:0 12px;color:var(--purple)}
+
+/* ════════════════ COMMANDS ════════════════ */
+.cmd-group{margin-bottom:32px}
+.cmd-header{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:14px;color:var(--lav)}
+.cmd-list{display:flex;flex-direction:column;gap:8px}
+.cmd-row{display:flex;align-items:flex-start;gap:16px;background:var(--surf);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;transition:all .2s;cursor:pointer}
+.cmd-row:hover{border-color:var(--purple);background:var(--surf2)}
+.cmd-name{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;font-size:15px;min-width:220px;white-space:nowrap;flex-shrink:0}
+.cmd-desc{color:var(--txt2);font-size:14px;line-height:1.5}
+
+/* ════════════════ AUTH / DASHBOARD ════════════════ */
+.auth-wall{text-align:center;padding:100px 20px}
+.auth-wall .big-icon{font-size:72px;margin-bottom:20px}
+
+/* ════════════════ MODAL ════════════════ */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:24px;padding:36px;max-width:480px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.6);transform:translateY(24px) scale(.97);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto}
+.overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:99px;background:var(--surf2);border:none;cursor:pointer;color:var(--txt2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--surf3);color:var(--txt)}
+
+/* ════════════════ FORM ════════════════ */
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:7px}
+.form-input{width:100%;background:var(--surf);border:1.5px solid var(--border);border-radius:12px;padding:11px 15px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--glow)}
+.form-input::placeholder{color:var(--txt3)}
+select.form-input option{background:var(--bg2);color:var(--txt)}
+.form-hint{font-size:12px;color:var(--txt3);margin-top:5px}
+
+/* ════════════════ QR MODAL ════════════════ */
+.qr-box{background:var(--surf);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px}
+.qr-code{width:160px;height:160px;margin:0 auto 12px;background:white;border-radius:12px;display:grid;grid-template-columns:repeat(17,1fr);gap:2px;padding:10px}
+.qr-c{border-radius:2px}
+.qr-c.b{background:#1a0830}.qr-c.w{background:transparent}
+.qr-expire{font-size:12px;color:var(--txt3)}
+.qr-expire span{font-weight:700;color:var(--lav)}
+.qr-scan-anim{width:100%;height:2px;background:var(--grad);animation:scanline 2s linear infinite;margin-bottom:8px}
+@keyframes scanline{0%{transform:translateY(-80px);opacity:.5}50%{opacity:1}100%{transform:translateY(80px);opacity:.5}}
+
+/* ════════════════ AI CHECKER ════════════════ */
+.ai-result{display:flex;align-items:flex-start;gap:12px;border-radius:14px;padding:14px;margin-top:12px;font-size:14px;animation:fadeIn .3s ease;border:1.5px solid var(--border)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.ai-result.valid{border-color:#22c55e44;background:rgba(34,197,94,.07);color:#22c55e}
+.ai-result.invalid{border-color:#ef444444;background:rgba(239,68,68,.07);color:#ef4444}
+.ai-result.loading{border-color:var(--purple)44}
+.ai-ava{width:42px;height:42px;border-radius:50%;flex-shrink:0;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+.ai-info strong{display:block;font-weight:600;margin-bottom:2px}
+.spin{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--purple);animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ════════════════ DASHBOARD LAYOUT ════════════════ */
+.dash-layout{display:flex;gap:24px;min-height:calc(100vh - 80px);padding:24px 0 80px}
+.dash-sidebar{width:260px;flex-shrink:0;position:sticky;top:80px;height:fit-content}
+.dash-main{flex:1;min-width:0}
+@media(max-width:860px){.dash-layout{flex-direction:column}.dash-sidebar{width:100%;position:static}}
+
+.sidebar-card{background:var(--surf);border:1.5px solid var(--border);border-radius:20px;padding:20px;margin-bottom:16px}
+.user-info-box{text-align:center;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.user-ava{width:72px;height:72px;border-radius:50%;border:3px solid var(--purple);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px;color:#fff}
+.user-ava img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.sidebar-nav{display:flex;flex-direction:column;gap:4px}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s;color:var(--txt2);font-size:14px;font-weight:500;border:none;background:transparent;text-align:left;width:100%}
+.sidebar-link:hover{background:var(--surf2);color:var(--txt)}
+.sidebar-link.act{background:var(--grad-soft);color:var(--lav);border:1px solid var(--border)}
+.sidebar-link .s-icon{width:32px;height:32px;border-radius:9px;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sidebar-link.act .s-icon{background:var(--grad);color:#fff}
+
+/* ════════════════ SERVER PICKER ════════════════ */
+.server-card{background:var(--surf);border:1.5px solid var(--border);border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:all .2s}
+.server-card:hover,.server-card.act{border-color:var(--purple);box-shadow:0 8px 28px var(--glow);transform:translateY(-2px)}
+.server-ava{width:52px;height:52px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;background:var(--grad)}
+.server-ava img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.s-name{font-weight:600;font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-meta{font-size:12px;color:var(--txt3)}
+
+/* ════════════════ SETTINGS SECTIONS ════════════════ */
+.settings-section{display:none}
+.settings-section.act{display:block;animation:fadeUp .3s ease}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.section-head-icon{width:44px;height:44px;border-radius:13px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);gap:16px}
+.setting-row:last-child{border-bottom:none}
+.setting-info{flex:1;min-width:0}
+.setting-info h4{font-size:15px;font-weight:600;margin-bottom:3px}
+.setting-info p{font-size:13px;color:var(--txt2);line-height:1.4}
+
+/* ════════════════ TOGGLE ════════════════ */
+.tog{width:46px;height:25px;border-radius:99px;background:var(--surf2);border:1.5px solid var(--border);cursor:pointer;position:relative;transition:background .25s;flex-shrink:0}
+.tog.on{background:var(--purple);border-color:var(--purple)}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.tog.on::after{transform:translateX(21px)}
+
+/* ════════════════ SELECT / INPUT ════════════════ */
+.set-select{background:var(--surf2);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;outline:none;transition:border-color .2s;max-width:180px}
+.set-select:focus{border-color:var(--purple)}
+.set-select option{background:var(--bg2)}
+.set-input{background:var(--surf2);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100px}
+.set-input:focus{border-color:var(--purple)}
+
+/* ════════════════ TAG INPUT (bad words) ════════════════ */
+.tag-input-wrap{display:flex;flex-wrap:wrap;gap:6px;background:var(--surf2);border:1.5px solid var(--border);border-radius:12px;padding:8px;min-height:44px;cursor:text;transition:border-color .2s;align-items:center}
+.tag-input-wrap:focus-within{border-color:var(--purple)}
+.tag{display:flex;align-items:center;gap:4px;background:var(--surf3);border:1px solid var(--border);border-radius:99px;padding:3px 8px 3px 10px;font-size:13px}
+.tag-del{background:none;border:none;cursor:pointer;color:var(--txt3);font-size:14px;padding:0 2px;line-height:1}
+.tag-del:hover{color:var(--rose)}
+.tag-input{border:none;background:transparent;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;min-width:80px;flex:1}
+
+/* ════════════════ CUSTOM COMMANDS ════════════════ */
+.custom-cmd-item{background:var(--surf);border:1.5px solid var(--border);border-radius:14px;padding:16px;display:flex;align-items:flex-start;gap:12px;transition:all .2s}
+.custom-cmd-item:hover{border-color:var(--border2)}
+.cmd-trigger{background:var(--surf3);border-radius:8px;padding:4px 10px;font-size:13px;color:var(--lav);font-weight:700;white-space:nowrap;flex-shrink:0;font-family:'DM Mono',monospace,monospace}
+.cmd-response-preview{font-size:13px;color:var(--txt2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.custom-cmd-list{display:flex;flex-direction:column;gap:8px}
+
+/* ════════════════ SAVE BUTTON ════════════════ */
+.save-btn{background:var(--grad);color:#fff;border:none;padding:12px 28px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s;margin-top:24px;box-shadow:0 4px 20px var(--glow);width:100%}
+.save-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--glow)}
+.save-btn.saved{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+/* ════════════════ ADD SERVER CTA ════════════════ */
+.add-server-card{border:2px dashed var(--border);border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;color:var(--txt3)}
+.add-server-card:hover{border-color:var(--purple);color:var(--lav);background:var(--grad-soft);transform:translateY(-2px)}
+.add-server-card .plus{font-size:28px;margin-bottom:6px}
+
+/* ════════════════ TOAST ════════════════ */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--surf);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-ico{font-size:18px}
+
+/* ════════════════ PROGRESS BAR ════════════════ */
+.progress{height:6px;border-radius:99px;background:var(--surf2);overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:99px;background:var(--grad);transition:width .5s ease}
+
+/* ════════════════ SERVER STATS ROW ════════════════ */
+.srv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.srv-stat{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.srv-stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.srv-stat-lbl{font-size:12px;color:var(--txt2);margin-top:2px}
+
+/* ════════════════ LOG LIST ════════════════ */
+.log-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surf2);border-radius:12px;margin-bottom:8px;font-size:13px}
+.log-badge{padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700;flex-shrink:0}
+.log-ban{background:rgba(239,68,68,.2);color:#ef4444}
+.log-mute{background:rgba(168,85,247,.2);color:#a855f7}
+.log-kick{background:rgba(251,113,133,.2);color:#fb7185}
+.log-warn{background:rgba(234,179,8,.2);color:#eab308}
+
+/* ════════════════ ECONOMY SHOP EDITOR ════════════════ */
+.shop-item-row{background:var(--surf);border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.shop-item-emoji{font-size:24px;flex-shrink:0}
+
+/* ════════════════ COLOR PALETTE ════════════════ */
+.palette{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pal-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
+.pal-dot:hover,.pal-dot.act{transform:scale(1.2);border-color:var(--txt)}
+
+/* ════════════════ FOOTER ════════════════ */
+footer{border-top:1px solid var(--border);padding:40px 0;text-align:center;color:var(--txt3);font-size:14px;margin-top:40px}
+footer a{color:var(--lav);text-decoration:none}
+footer a:hover{color:var(--pink)}
+
+/* ════════════════ RESPONSIVE ════════════════ */
+@media(max-width:640px){
+  .hide-sm{display:none!important}
+  .nav-links{gap:2px}
+  .nav-link{padding:6px 10px;font-size:13px}
 }
 
-/* ── NOISE TEXTURE ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0;
-}
+/* ════════════════ INVITE MODAL ════════════════ */
+.perms-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.perms-list li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--txt2)}
+.perms-list li::before{content:'✓';color:#22c55e;font-weight:700}
 
-/* ── AMBIENT BLOBS ── */
-.blob {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
-  animation: float 8s ease-in-out infinite;
-}
-.blob-1 { width: 500px; height: 500px; background: var(--v-purple); opacity: .07; top: -100px; right: -100px; animation-delay: 0s; }
-.blob-2 { width: 400px; height: 400px; background: var(--v-pink);   opacity: .07; bottom: 0; left: -100px; animation-delay: 3s; }
-.blob-3 { width: 300px; height: 300px; background: var(--v-rose);   opacity: .05; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 6s; }
+/* ════════════════ TABS ════════════════ */
+.tabs{display:flex;gap:4px;background:var(--surf2);border-radius:12px;padding:4px;margin-bottom:20px}
+.tab{padding:8px 16px;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--txt2);border:none;background:transparent;font-family:'DM Sans',sans-serif}
+.tab.act{background:var(--surf);color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.2)}
 
-@keyframes float {
-  0%,100% { transform: translate(0,0) scale(1); }
-  50%      { transform: translate(20px,-30px) scale(1.05); }
-}
-
-/* ── LAYOUT ── */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
-
-/* ── NAV ── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(20px) saturate(1.5);
-  background: var(--bg)cc;
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0;
-}
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-}
-.logo {
-  display: flex; align-items: center; gap: 10px;
-  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px;
-  background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  text-decoration: none;
-}
-.logo svg { width: 32px; height: 32px; }
-.nav-actions { display: flex; align-items: center; gap: 12px; }
-
-/* ── THEME TOGGLE ── */
-.theme-toggle {
-  width: 56px; height: 28px;
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: 99px; cursor: pointer;
-  position: relative; transition: background .3s;
-  display: flex; align-items: center; padding: 3px;
-}
-.theme-toggle::after {
-  content: '';
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--grad-main);
-  transition: transform .3s;
-  box-shadow: 0 2px 8px var(--glow);
-}
-[data-theme="light"] .theme-toggle::after { transform: translateX(28px); }
-
-.theme-icon { position: absolute; font-size: 11px; }
-.theme-icon.sun  { left: 6px; }
-.theme-icon.moon { right: 6px; }
-
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-radius: 12px;
-  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px;
-  cursor: pointer; border: none; transition: all .2s;
-  text-decoration: none;
-}
-.btn-primary {
-  background: var(--grad-main); color: #fff;
-  box-shadow: 0 4px 20px var(--glow);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--glow); }
-.btn-secondary {
-  background: var(--surface2); color: var(--text);
-  border: 1.5px solid var(--border);
-}
-.btn-secondary:hover { background: var(--surface); border-color: var(--v-purple); }
-.btn-ghost {
-  background: transparent; color: var(--text2);
-  border: 1.5px solid transparent;
-}
-.btn-ghost:hover { border-color: var(--border); color: var(--text); }
-
-/* ── DISCORD BUTTON ── */
-.btn-discord {
-  background: #5865f2;
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(88,101,242,.4);
-}
-.btn-discord:hover { background: #4752c4; transform: translateY(-2px); }
-
-/* ── HERO ── */
-.hero {
-  padding: 120px 0 80px;
-  text-align: center;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 99px; padding: 6px 14px;
-  font-size: 13px; color: var(--text2); margin-bottom: 32px;
-}
-.hero-badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--v-pink); display: inline-block; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-
-.hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(42px, 7vw, 86px);
-  font-weight: 800; line-height: 1.05;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
-}
-.hero h1 .grad { background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero p {
-  font-size: 18px; color: var(--text2);
-  max-width: 520px; margin: 0 auto 40px; line-height: 1.7;
-}
-.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-/* ── FEATURE PILLS ── */
-.features {
-  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
-  margin: 48px 0 80px;
-}
-.pill {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 99px; padding: 8px 16px; font-size: 14px; color: var(--text2);
-  transition: all .2s;
-}
-.pill:hover { border-color: var(--v-purple); color: var(--text); transform: translateY(-2px); }
-.pill .icon { font-size: 16px; }
-
-/* ── SECTION TITLES ── */
-.section { padding: 80px 0; }
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 800; letter-spacing: -1px;
-  margin-bottom: 12px;
-}
-.section-sub { color: var(--text2); font-size: 16px; margin-bottom: 48px; }
-.grad-text { background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* ── CARDS ── */
-.card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 20px; padding: 28px;
-  transition: all .25s;
-  box-shadow: var(--shadow);
-}
-.card:hover {
-  border-color: var(--v-purple);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px var(--glow);
-}
-.card-icon {
-  width: 48px; height: 48px;
-  background: var(--grad-soft); border: 1.5px solid var(--border);
-  border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  font-size: 22px; margin-bottom: 16px;
-}
-.card h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 8px; }
-.card p { color: var(--text2); font-size: 14px; line-height: 1.6; }
-
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
-
-/* ── COMMANDS TABLE ── */
-.cmd-group { margin-bottom: 32px; }
-.cmd-group-title {
-  display: flex; align-items: center; gap: 8px;
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
-  margin-bottom: 14px; color: var(--v-lavender);
-}
-.cmd-list { display: flex; flex-direction: column; gap: 8px; }
-.cmd-item {
-  display: flex; align-items: flex-start; gap: 16px;
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 14px 18px;
-  transition: all .2s;
-}
-.cmd-item:hover { border-color: var(--v-purple); background: var(--surface2); }
-.cmd-name {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  font-weight: 700; font-size: 15px; min-width: 180px; white-space: nowrap;
-}
-.cmd-desc { color: var(--text2); font-size: 14px; }
-
-/* ── MODAL ── */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  opacity: 0; pointer-events: none; transition: opacity .3s;
-}
-.modal-overlay.active { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: 24px; padding: 40px; max-width: 460px; width: 100%;
-  box-shadow: 0 32px 80px rgba(0,0,0,.5);
-  transform: translateY(20px); transition: transform .3s;
-  position: relative;
-}
-.modal-overlay.active .modal { transform: translateY(0); }
-.modal-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 32px; height: 32px; border-radius: 99px;
-  background: var(--surface2); border: none; cursor: pointer;
-  color: var(--text2); font-size: 18px; display: flex; align-items: center; justify-content: center;
-}
-.modal h2 { font-family: 'Syne', sans-serif; font-weight: 800; margin-bottom: 8px; }
-.modal p { color: var(--text2); font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
-
-/* ── FORM ── */
-.form-group { margin-bottom: 20px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
-.form-input {
-  width: 100%; background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 12px; padding: 12px 16px; color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 15px;
-  transition: border-color .2s, box-shadow .2s; outline: none;
-}
-.form-input:focus {
-  border-color: var(--v-purple);
-  box-shadow: 0 0 0 3px var(--glow);
-}
-.form-input::placeholder { color: var(--text3); }
-
-/* ── AI CHECKER ── */
-.ai-checker { margin-top: 20px; }
-.ai-result {
-  display: flex; align-items: flex-start; gap: 12px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 14px;
-  margin-top: 14px; font-size: 14px;
-  animation: slideIn .3s ease;
-}
-@keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-.ai-result.valid   { border-color: #22c55e44; background: #22c55e0a; color: #22c55e; }
-.ai-result.invalid { border-color: #ef444444; background: #ef44440a; color: #ef4444; }
-.ai-result.loading { border-color: var(--v-purple)44; }
-.ai-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  object-fit: cover; flex-shrink: 0;
-  border: 2px solid var(--border);
-}
-.ai-info strong { display: block; font-weight: 600; margin-bottom: 3px; }
-.ai-info span { font-size: 12px; opacity: .8; }
-.spinner {
-  width: 20px; height: 20px; border-radius: 50%;
-  border: 2px solid var(--border); border-top-color: var(--v-purple);
-  animation: spin .7s linear infinite; flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── DASHBOARD ── */
-#dashboard { display: none; }
-#dashboard.active { display: block; }
-
-.dash-header {
-  display: flex; align-items: center; gap: 16px;
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 20px; padding: 20px 24px; margin-bottom: 28px;
-}
-.dash-avatar { width: 56px; height: 56px; border-radius: 50%; border: 2.5px solid var(--v-purple); }
-.dash-user-info h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; }
-.dash-user-info p { color: var(--text2); font-size: 13px; }
-.dash-badge {
-  margin-left: auto;
-  display: flex; align-items: center; gap: 6px;
-  background: var(--grad-soft); border: 1.5px solid var(--v-purple)44;
-  border-radius: 99px; padding: 5px 12px; font-size: 12px; color: var(--v-lavender);
-}
-
-.server-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-.server-card {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 16px; padding: 20px; text-align: center;
-  cursor: pointer; transition: all .2s;
-}
-.server-card:hover, .server-card.active { border-color: var(--v-purple); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px); }
-.server-card img { width: 48px; height: 48px; border-radius: 50%; margin-bottom: 10px; }
-.server-card .no-icon {
-  width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px;
-  background: var(--grad-main); display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-weight: 800; color: #fff; font-size: 18px;
-}
-.server-card h4 { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-.server-card p { color: var(--text3); font-size: 12px; }
-
-/* ── SETTINGS PANEL ── */
-.settings-panel {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 20px; padding: 28px; margin-top: 28px;
-}
-.settings-panel h3 {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px;
-  margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
-}
-
-.setting-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 0; border-bottom: 1px solid var(--border);
-}
-.setting-row:last-child { border-bottom: none; }
-.setting-info h4 { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-.setting-info p { color: var(--text2); font-size: 13px; }
-
-/* ── TOGGLE SWITCH ── */
-.toggle {
-  width: 44px; height: 24px; border-radius: 99px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  cursor: pointer; position: relative; transition: background .25s;
-  flex-shrink: 0;
-}
-.toggle.on { background: var(--v-purple); border-color: var(--v-purple); }
-.toggle::after {
-  content: ''; position: absolute; top: 2px; left: 2px;
-  width: 16px; height: 16px; border-radius: 50%; background: #fff;
-  transition: transform .25s; box-shadow: 0 1px 4px rgba(0,0,0,.3);
-}
-.toggle.on::after { transform: translateX(20px); }
-
-/* ── SELECT ── */
-.setting-select {
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 10px; padding: 8px 14px; color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; outline: none;
-  transition: border-color .2s;
-}
-.setting-select:focus { border-color: var(--v-purple); }
-
-/* ── COLOR PICKER ROW ── */
-.color-options { display: flex; gap: 8px; }
-.color-dot {
-  width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
-  border: 2.5px solid transparent; transition: all .2s;
-}
-.color-dot.active, .color-dot:hover { transform: scale(1.2); border-color: var(--text); }
-
-/* ── STATS MINI ── */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 24px; }
-.stat-box {
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 16px; text-align: center;
-}
-.stat-box .num {
-  font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
-  background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.stat-box .lbl { font-size: 12px; color: var(--text2); margin-top: 4px; }
-
-/* ── SAVE BTN ANIMATION ── */
-.btn-save {
-  background: var(--grad-main); color: #fff; border: none;
-  padding: 12px 28px; border-radius: 12px;
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
-  cursor: pointer; transition: all .2s; margin-top: 20px;
-  box-shadow: 0 4px 20px var(--glow);
-}
-.btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--glow); }
-.btn-save.saved { background: linear-gradient(135deg, #22c55e, #16a34a); }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 28px; right: 28px; z-index: 999;
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 14px 20px;
-  display: flex; align-items: center; gap: 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.3);
-  transform: translateY(100px) scale(.9); opacity: 0;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  max-width: 320px;
-}
-.toast.show { transform: translateY(0) scale(1); opacity: 1; }
-.toast-icon { font-size: 20px; }
-
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 40px 0; text-align: center;
-  color: var(--text3); font-size: 14px; margin-top: 80px;
-}
-footer a { color: var(--v-lavender); text-decoration: none; }
-footer a:hover { color: var(--v-pink); }
-
-/* ── DIVIDER ── */
-.divider {
-  height: 1px; background: var(--border);
-  margin: 40px 0; position: relative;
-}
-.divider::after {
-  content: '✦'; position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%,-50%);
-  background: var(--bg2); padding: 0 12px;
-  color: var(--v-purple);
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 640px) {
-  .hero { padding: 80px 0 60px; }
-  .nav-actions .btn span { display: none; }
-  .cmd-item { flex-direction: column; gap: 6px; }
-  .cmd-name { min-width: unset; }
-}
-
-/* ── PAGE TRANSITIONS ── */
-.page { display: none; }
-.page.active { display: block; animation: fadeInUp .4s ease; }
-@keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-
-/* ── GLOW BORDER HOVER ── */
-.glow-border {
-  border: 1.5px solid transparent;
-  background: linear-gradient(var(--surface), var(--surface)) padding-box,
-              var(--grad-main) border-box;
-}
-
-/* ── NAV PILLS ── */
-.nav-pills { display: flex; gap: 4px; }
-.nav-pill {
-  padding: 7px 14px; border-radius: 99px;
-  font-size: 14px; cursor: pointer; transition: all .2s;
-  background: transparent; border: none; color: var(--text2);
-  font-family: 'DM Sans', sans-serif;
-}
-.nav-pill:hover { background: var(--surface2); color: var(--text); }
-.nav-pill.active {
-  background: var(--surface2); color: var(--v-lavender);
-  border: 1px solid var(--border);
-}
+/* ════════════════ NOTIFICATION DOT ════════════════ */
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);margin-left:auto;animation:pulse 2s infinite}
 </style>
 </head>
 <body>
 
-<!-- AMBIENT BLOBS -->
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
+<!-- AMBIENT -->
+<div class="amb amb-a"></div>
+<div class="amb amb-b"></div>
+<div class="amb amb-c"></div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="toast-icon">💜</span>
-  <span id="toast-msg">Сохранено!</span>
-</div>
+<div class="toast" id="toast"><span class="toast-ico">💜</span><span id="toast-msg">Сохранено!</span></div>
 
-<!-- NAV -->
+<!-- ═══════════ NAV ═══════════ -->
 <nav>
-  <div class="container nav-inner">
-    <a href="#" class="logo" onclick="showPage('home')">
-      <svg viewBox="0 0 32 32" fill="none">
-        <circle cx="16" cy="16" r="15" fill="url(#lg)"/>
-        <path d="M10 20c1.5-4 6-6 12-4M10 12c2-1 4.5-.5 6 1.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#a855f7"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
-      </svg>
-      VioletBot
-    </a>
-
-    <div class="nav-pills" id="nav-pills">
-      <button class="nav-pill active" onclick="showPage('home')">Главная</button>
-      <button class="nav-pill" onclick="showPage('commands')">Команды</button>
-      <button class="nav-pill" onclick="showPage('dashboard')">Панель</button>
-    </div>
-
-    <div class="nav-actions">
-      <div class="theme-toggle" onclick="toggleTheme()" title="Сменить тему">
-        <span class="theme-icon sun">☀️</span>
-        <span class="theme-icon moon">🌙</span>
-      </div>
-      <button class="btn btn-discord" onclick="openLoginModal()">
-        <svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9ZM23.7 38.2c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.5 0 6.4 3.2 6.3 7.2 0 4-2.8 7.2-6.3 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.4 3.2 6.3 7.2c0 4-2.8 7.2-6.3 7.2Z"/></svg>
-        <span>Войти через Discord</span>
-      </button>
-    </div>
+<div class="wrap nav-inner">
+  <div class="logo" onclick="showPage('home')">
+    <svg width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="url(#lg)"/><path d="M10 20c1.5-4.5 6.5-6.5 12.5-4M10.5 12.5c2-1.2 4.5-.6 6 1.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+    <span class="logo-text">VioletBot</span>
   </div>
+  <div class="nav-links">
+    <button class="nav-link act" id="nl-home" onclick="showPage('home')">Главная</button>
+    <button class="nav-link" id="nl-commands" onclick="showPage('commands')">Команды</button>
+    <button class="nav-link" id="nl-dashboard" onclick="checkDashAuth()">Панель</button>
+  </div>
+  <div class="flex items-center gap-12">
+    <div class="thm" onclick="toggleTheme()" title="Тема"><div class="thm-icons"><span>☀️</span><span>🌙</span></div></div>
+    <button class="btn btn-discord btn-sm" onclick="openModal('login-modal')">
+      <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9Z"/></svg>
+      <span class="hide-sm">Войти</span>
+    </button>
+  </div>
+</div>
 </nav>
 
-<!-- ═══════════════════════════════════════ HOME PAGE -->
-<div class="page active" id="page-home">
-<div class="container">
+<!-- ═══════════════════════════════════ HOME PAGE ═══════════════════════════════════ -->
+<div class="page act" id="page-home">
+<div class="wrap z1">
   <div class="hero">
-    <div class="hero-badge">
-      <span></span> Онлайн и готов к работе
-    </div>
-    <h1>Мощный бот для<br><span class="grad">вашего сервера</span></h1>
-    <p>Модерация, мини-игры, экономика, автоматические роли — всё в одном боте с красивым дизайном</p>
-    <div class="hero-actions">
-      <button class="btn btn-primary" onclick="openLoginModal()">
-        🚀 Добавить на сервер
-      </button>
-      <button class="btn btn-secondary" onclick="showPage('commands')">
-        📖 Команды
-      </button>
+    <div class="badge"><span class="badge-dot"></span> Онлайн · 24/7</div>
+    <h1 class="h1">Лучший бот для<br><span class="grad-txt">вашего сервера</span></h1>
+    <p class="hero-desc">Модерация, музыка, конкурсы, экономика и мини-игры — всё в одном боте с красивым дизайном и полным управлением через веб-панель</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary btn-lg" onclick="openModal('invite-modal')">🚀 Добавить на сервер</button>
+      <button class="btn btn-secondary btn-lg" onclick="showPage('commands')">📖 Все команды</button>
     </div>
   </div>
 
-  <div class="features">
-    <div class="pill"><span class="icon">🛡️</span> Модерация</div>
-    <div class="pill"><span class="icon">🎮</span> Мини-игры</div>
-    <div class="pill"><span class="icon">💰</span> Экономика</div>
-    <div class="pill"><span class="icon">🎭</span> Роли</div>
-    <div class="pill"><span class="icon">⬆️</span> Уровни</div>
-    <div class="pill"><span class="icon">🏆</span> Лидерборд</div>
-    <div class="pill"><span class="icon">🎁</span> Ежедневки</div>
-    <div class="pill"><span class="icon">🧠</span> Викторина</div>
+  <div class="feature-pills">
+    <div class="pill">🛡️ Модерация</div><div class="pill">🎵 Музыка</div>
+    <div class="pill">🎉 Конкурсы</div><div class="pill">💰 Экономика</div>
+    <div class="pill">🎮 Мини-игры</div><div class="pill">⬆️ Уровни & XP</div>
+    <div class="pill">🎭 Авторолли</div><div class="pill">📊 Статистика</div>
+    <div class="pill">🔧 Кастомизация</div><div class="pill">💬 Приветствия</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-box"><div class="num">40+</div><div class="lbl">Команд</div></div>
-    <div class="stat-box"><div class="num">8</div><div class="lbl">Мини-игр</div></div>
-    <div class="stat-box"><div class="num">24/7</div><div class="lbl">Онлайн</div></div>
-    <div class="stat-box"><div class="num">0₽</div><div class="lbl">Бесплатно</div></div>
+  <div class="stats-grid mt-32">
+    <div class="stat-box"><div class="stat-num">60+</div><div class="stat-lbl">Команд</div></div>
+    <div class="stat-box"><div class="stat-num">7</div><div class="stat-lbl">Мини-игр</div></div>
+    <div class="stat-box"><div class="stat-num">24/7</div><div class="stat-lbl">Онлайн</div></div>
+    <div class="stat-box"><div class="stat-num">0₽</div><div class="stat-lbl">Бесплатно</div></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Всё что нужно <span class="grad-text">серверу</span></div>
-    <div class="section-sub">Один бот — бесконечные возможности</div>
+    <h2 class="h2">Всё что нужно <span class="grad-txt">серверу</span></h2>
+    <p class="section-sub">Один бот — неограниченные возможности</p>
     <div class="grid-3">
-      <div class="card">
-        <div class="card-icon">🛡️</div>
-        <h3>Модерация</h3>
-        <p>Бан, кик, мут, предупреждения, очистка сообщений, блокировка каналов и slowmode — держите сервер в порядке</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎮</div>
-        <h3>Мини-игры</h3>
-        <p>Монетка, кубик, слоты, КНБ, викторина, угадай число и магический шар — развлечения для всей аудитории</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">💰</div>
-        <h3>Экономика</h3>
-        <p>Виртуальная валюта, ежедневные награды, переводы между пользователями, магазин и инвентарь</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎭</div>
-        <h3>Система ролей</h3>
-        <p>Автоматическая выдача ролей, управление ролями участников, авторолей для новичков</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">⬆️</div>
-        <h3>Уровни & XP</h3>
-        <p>Участники получают XP за сообщения, повышают уровень и попадают в общий рейтинг сервера</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎨</div>
-        <h3>Красивый дизайн</h3>
-        <p>Все ответы бота оформлены в виде красивых embed-сообщений с иконками и цветовой схемой</p>
-      </div>
+      <div class="card card-lift"><div class="card-icon">🛡️</div><h3 class="h4 mb-8">Полная модерация</h3><p class="muted small">Бан, кик, мьют с указанием времени и причины. История наказаний, автопредупреждения, фильтр слов и антирейд защита</p></div>
+      <div class="card card-lift"><div class="card-icon">🎵</div><h3 class="h4 mb-8">Музыкальный плеер</h3><p class="muted small">Поиск YouTube по названию или ссылке, очередь треков, управление громкостью, пауза, перемотка и перемешивание</p></div>
+      <div class="card card-lift"><div class="card-icon">🎉</div><h3 class="h4 mb-8">Конкурсы & Розыгрыши</h3><p class="muted small">Создание конкурсов с таймером, выбор нескольких победителей, рерол, досрочное завершение и уведомления</p></div>
+      <div class="card card-lift"><div class="card-icon">💰</div><h3 class="h4 mb-8">Экономика</h3><p class="muted small">Виртуальная валюта, ежедневные награды, переводы, магазин ролей и предметов с инвентарём</p></div>
+      <div class="card card-lift"><div class="card-icon">⬆️</div><h3 class="h4 mb-8">Система уровней</h3><p class="muted small">XP за активность, уровни с красивыми прогресс-барами, топ серверов и награды за прокачку</p></div>
+      <div class="card card-lift"><div class="card-icon">⚙️</div><h3 class="h4 mb-8">Веб-панель</h3><p class="muted small">Полное управление через красивый сайт. Смена префикса, настройка модерации, создание кастомных команд</p></div>
+    </div>
+  </div>
+
+  <div class="card card-glow text-center" style="padding:48px">
+    <div style="font-size:48px;margin-bottom:16px">🚀</div>
+    <h2 class="h2 mb-8">Готов начать?</h2>
+    <p class="muted mb-24">Добавь VioletBot на свой сервер прямо сейчас — это бесплатно!</p>
+    <div class="flex gap-12 justify-center flex-wrap">
+      <button class="btn btn-primary btn-lg" onclick="openModal('invite-modal')">Добавить бота</button>
+      <button class="btn btn-secondary btn-lg" onclick="openModal('login-modal')">Войти в панель</button>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════ COMMANDS PAGE -->
+<!-- ═══════════════════════════════════ COMMANDS PAGE ═══════════════════════════════════ -->
 <div class="page" id="page-commands">
-<div class="container">
-  <div style="padding: 60px 0 40px;">
-    <div class="section-title">Все <span class="grad-text">команды</span></div>
-    <div class="section-sub">Все команды начинаются с префикса <code style="background:var(--surface2);padding:2px 8px;border-radius:6px;color:var(--v-lavender)">!</code></div>
-  </div>
+<div class="wrap z1" style="padding-top:48px;padding-bottom:80px">
+  <h2 class="h2">Все <span class="grad-txt">команды</span></h2>
+  <p class="section-sub">Префикс по умолчанию <code>!</code> — можно изменить через панель управления</p>
 
   <div class="cmd-group">
-    <div class="cmd-group-title">🛡️ Модерация</div>
+    <div class="cmd-header">🛡️ Модерация</div>
     <div class="cmd-list">
-      <div class="cmd-item"><div class="cmd-name">!ban @user [причина]</div><div class="cmd-desc">Забанить участника с указанием причины. Требуются права на бан.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!kick @user [причина]</div><div class="cmd-desc">Кикнуть участника с сервера. Требуются права на кик.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!mute @user [минуты]</div><div class="cmd-desc">Замутить участника на указанное время (по умолчанию 10 минут).</div></div>
-      <div class="cmd-item"><div class="cmd-name">!unmute @user</div><div class="cmd-desc">Снять мут с участника досрочно.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!warn @user [причина]</div><div class="cmd-desc">Выдать предупреждение. При 3-м предупреждении — автокик.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!warns @user</div><div class="cmd-desc">Просмотреть все предупреждения участника.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!clear [кол-во]</div><div class="cmd-desc">Удалить указанное количество сообщений в канале.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!lock / !unlock</div><div class="cmd-desc">Заблокировать или разблокировать текущий канал для участников.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!slowmode [секунды]</div><div class="cmd-desc">Установить медленный режим в канале (0 — отключить).</div></div>
+      <div class="cmd-row"><span class="cmd-name">!бан @user [время] [причина]</span><span class="cmd-desc">Забанить участника. Время опционально (1д, 2ч30м). Требуются права на бан.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!разбан [ID] [причина]</span><span class="cmd-desc">Разбанить по ID пользователя.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!кик @user [причина]</span><span class="cmd-desc">Кикнуть участника с сервера с уведомлением в ЛС.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!мьют @user [время] [причина]</span><span class="cmd-desc">Замутить на указанное время (1д2ч30м10с). Автоматический размьют по истечении.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!размьют @user</span><span class="cmd-desc">Досрочно снять мут с участника.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!пред @user [причина]</span><span class="cmd-desc">Предупреждение. 2 варна = автомьют, 3 варна = автокик (настраивается).</span></div>
+      <div class="cmd-row"><span class="cmd-name">!предупреждения [@user]</span><span class="cmd-desc">Просмотреть все предупреждения участника.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!снятьпред @user [номер]</span><span class="cmd-desc">Снять предупреждение (0 = все).</span></div>
+      <div class="cmd-row"><span class="cmd-name">!история @user</span><span class="cmd-desc">История всех наказаний участника.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!очистить [кол-во]</span><span class="cmd-desc">Удалить сообщения в канале.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!блок / !разблок [#канал]</span><span class="cmd-desc">Заблокировать/разблокировать канал для участников.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!медленный [время]</span><span class="cmd-desc">Установить режим slowmode (0 = выкл).</span></div>
+      <div class="cmd-row"><span class="cmd-name">!ник @user [новый_ник]</span><span class="cmd-desc">Изменить ник участника (пусто = сбросить).</span></div>
     </div>
   </div>
 
   <div class="cmd-group">
-    <div class="cmd-group-title">💰 Экономика</div>
+    <div class="cmd-header">🎵 Музыка</div>
     <div class="cmd-list">
-      <div class="cmd-item"><div class="cmd-name">!balance [@user]</div><div class="cmd-desc">Показать баланс в виолетовых монетах. Псевдонимы: !bal, !coins</div></div>
-      <div class="cmd-item"><div class="cmd-name">!daily</div><div class="cmd-desc">Получить ежедневную награду (50–200 монет, раз в 24 часа).</div></div>
-      <div class="cmd-item"><div class="cmd-name">!pay @user [сумма]</div><div class="cmd-desc">Перевести монеты другому участнику.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!shop</div><div class="cmd-desc">Открыть магазин — VIP роль, розовый ник, XP Boost.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!buy [предмет]</div><div class="cmd-desc">Купить предмет из магазина.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!inventory</div><div class="cmd-desc">Показать ваш инвентарь. Псевдоним: !inv</div></div>
-      <div class="cmd-item"><div class="cmd-name">!leaderboard</div><div class="cmd-desc">Топ-10 богатейших участников сервера. Псевдонимы: !lb, !rich</div></div>
+      <div class="cmd-row"><span class="cmd-name">!играть [название / ссылка]</span><span class="cmd-desc">Подключиться к вашему голосовому каналу и воспроизвести трек с YouTube. Принимает название или прямую ссылку.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!пауза / !продолжить</span><span class="cmd-desc">Поставить на паузу или продолжить воспроизведение.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!стоп</span><span class="cmd-desc">Остановить музыку и выйти из голосового канала.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!пропустить</span><span class="cmd-desc">Пропустить текущий трек и воспроизвести следующий.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!очередь</span><span class="cmd-desc">Показать очередь треков с текущим треком.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!громкость [0-100]</span><span class="cmd-desc">Установить громкость воспроизведения.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!сейчас</span><span class="cmd-desc">Показать информацию о текущем треке.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!перемешать</span><span class="cmd-desc">Перемешать треки в очереди.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!петля</span><span class="cmd-desc">Включить/выключить повтор текущего трека.</span></div>
     </div>
   </div>
 
   <div class="cmd-group">
-    <div class="cmd-group-title">🎮 Мини-игры</div>
+    <div class="cmd-header">🎉 Конкурсы</div>
     <div class="cmd-list">
-      <div class="cmd-item"><div class="cmd-name">!coinflip [сторона] [ставка]</div><div class="cmd-desc">Орёл или решка — угадай и выиграй монеты! Псевдоним: !cf</div></div>
-      <div class="cmd-item"><div class="cmd-name">!dice [ставка]</div><div class="cmd-desc">Бросить кубик — победи бота, чтобы получить ставку ×2.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!slots [ставка]</div><div class="cmd-desc">Однорукий бандит — три одинаковых = джекпот ×5 (💎 ×20)!</div></div>
-      <div class="cmd-item"><div class="cmd-name">!rps [камень/ножницы/бумага]</div><div class="cmd-desc">Камень-ножницы-бумага против бота.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!trivia</div><div class="cmd-desc">Вопрос викторины. Правильный ответ = 20–80 монет!</div></div>
-      <div class="cmd-item"><div class="cmd-name">!guess</div><div class="cmd-desc">Угадай число от 1 до 100 за 5 попыток. Чем раньше — тем больше монет.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!8ball [вопрос]</div><div class="cmd-desc">Магический шар ответит на любой вопрос 🎱</div></div>
+      <div class="cmd-row"><span class="cmd-name">!конкурс [время] [победителей] [приз]</span><span class="cmd-desc">Создать конкурс. Пример: !конкурс 1д 2 Нитро — конкурс на 1 день, 2 победителя.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!рерол [ID сообщения]</span><span class="cmd-desc">Перевыбрать победителей конкурса заново.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!завершить_конкурс [ID]</span><span class="cmd-desc">Досрочно завершить конкурс и выбрать победителей.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!конкурсы</span><span class="cmd-desc">Список всех активных конкурсов на сервере.</span></div>
     </div>
   </div>
 
   <div class="cmd-group">
-    <div class="cmd-group-title">🎭 Роли</div>
+    <div class="cmd-header">💰 Экономика</div>
     <div class="cmd-list">
-      <div class="cmd-item"><div class="cmd-name">!role @user @роль</div><div class="cmd-desc">Выдать роль участнику. Требуются права управления ролями.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!removerole @user @роль</div><div class="cmd-desc">Забрать роль у участника.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!rolelist</div><div class="cmd-desc">Показать список всех ролей на сервере.</div></div>
+      <div class="cmd-row"><span class="cmd-name">!баланс [@user]</span><span class="cmd-desc">Посмотреть баланс монет (свой или чужой).</span></div>
+      <div class="cmd-row"><span class="cmd-name">!ежедневно</span><span class="cmd-desc">Получить ежедневную награду (50–200 монет, раз в 24ч).</span></div>
+      <div class="cmd-row"><span class="cmd-name">!перевести @user [сумма]</span><span class="cmd-desc">Перевести монеты другому участнику.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!магазин</span><span class="cmd-desc">Открыть магазин предметов и ролей.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!купить [предмет]</span><span class="cmd-desc">Купить предмет из магазина.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!инвентарь [@user]</span><span class="cmd-desc">Просмотреть инвентарь.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!топбогачей</span><span class="cmd-desc">Топ-10 богатейших участников сервера.</span></div>
     </div>
   </div>
 
   <div class="cmd-group">
-    <div class="cmd-group-title">ℹ️ Информация</div>
+    <div class="cmd-header">🎮 Мини-игры</div>
     <div class="cmd-list">
-      <div class="cmd-item"><div class="cmd-name">!profile [@user]</div><div class="cmd-desc">Показать профиль — уровень, монеты, XP и инвентарь. Псевдоним: !prof</div></div>
-      <div class="cmd-item"><div class="cmd-name">!serverinfo</div><div class="cmd-desc">Информация о сервере: участники, каналы, роли, дата создания.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!level [@user]</div><div class="cmd-desc">Показать уровень и прогресс XP с визуальной шкалой.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!top</div><div class="cmd-desc">Топ-10 участников по уровню.</div></div>
-      <div class="cmd-item"><div class="cmd-name">!help [категория]</div><div class="cmd-desc">Список команд. Категории: mod, eco, games, roles, info</div></div>
+      <div class="cmd-row"><span class="cmd-name">!монетка [орёл/решка] [ставка]</span><span class="cmd-desc">Подбросить монетку. Угадай и удвой ставку!</span></div>
+      <div class="cmd-row"><span class="cmd-name">!кубик [ставка]</span><span class="cmd-desc">Бросить кубик против бота. Больше = победа.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!слоты [ставка]</span><span class="cmd-desc">Однорукий бандит. Три одинаковых = джекпот ×5–20!</span></div>
+      <div class="cmd-row"><span class="cmd-name">!кнб [камень/ножницы/бумага]</span><span class="cmd-desc">Камень-ножницы-бумага против бота.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!викторина</span><span class="cmd-desc">Вопрос викторины. Правильный ответ = 20–80 монет.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!угадай</span><span class="cmd-desc">Угадай число от 1 до 100 за 5 попыток.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!шар [вопрос]</span><span class="cmd-desc">Магический шар ответит на любой вопрос 🎱</span></div>
     </div>
   </div>
-  <div style="height:60px"></div>
+
+  <div class="cmd-group">
+    <div class="cmd-header">🎭 Роли</div>
+    <div class="cmd-list">
+      <div class="cmd-row"><span class="cmd-name">!роль @user @роль</span><span class="cmd-desc">Выдать роль участнику.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!снятьроль @user @роль</span><span class="cmd-desc">Забрать роль у участника.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!список_ролей</span><span class="cmd-desc">Список всех ролей сервера.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!инфо_роль @роль</span><span class="cmd-desc">Детальная информация о роли.</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-group">
+    <div class="cmd-header">ℹ️ Информация</div>
+    <div class="cmd-list">
+      <div class="cmd-row"><span class="cmd-name">!профиль [@user]</span><span class="cmd-desc">Полная карточка профиля: уровень, монеты, предупреждения, мьют.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!инфосервер</span><span class="cmd-desc">Статистика сервера.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!уровень [@user]</span><span class="cmd-desc">Уровень и XP с прогресс-баром.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!топуровень</span><span class="cmd-desc">Топ участников по уровню.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!аватар [@user]</span><span class="cmd-desc">Показать аватар пользователя.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!пинг</span><span class="cmd-desc">Задержка бота.</span></div>
+      <div class="cmd-row"><span class="cmd-name">!помощь [категория]</span><span class="cmd-desc">Список команд. Категории: мод, муз, эко, конкурс, игры, роли, инфо</span></div>
+    </div>
+  </div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════ DASHBOARD PAGE -->
+<!-- ═══════════════════════════════════ DASHBOARD PAGE ═══════════════════════════════════ -->
 <div class="page" id="page-dashboard">
-<div class="container">
-  <div style="padding: 60px 0 20px;">
-    <div class="section-title">Панель <span class="grad-text">управления</span></div>
-    <div class="section-sub">Настройте бота под свой сервер</div>
-  </div>
+<div class="wrap z1">
 
-  <!-- NOT LOGGED IN STATE -->
-  <div id="dash-no-auth" style="text-align:center;padding:80px 0;">
-    <div style="font-size:64px;margin-bottom:20px;">🔐</div>
-    <h2 style="font-family:'Syne',sans-serif;font-size:28px;margin-bottom:12px;">Требуется авторизация</h2>
-    <p style="color:var(--text2);margin-bottom:28px;">Войдите через Discord чтобы управлять настройками бота на своих серверах</p>
-    <button class="btn btn-discord" onclick="openLoginModal()" style="font-size:16px;padding:14px 28px;">
-      <svg width="20" height="16" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9ZM23.7 38.2c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.5 0 6.4 3.2 6.3 7.2 0 4-2.8 7.2-6.3 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.4 3.2 6.3 7.2c0 4-2.8 7.2-6.3 7.2Z"/></svg>
+  <!-- NOT LOGGED IN -->
+  <div id="dash-unauth" class="auth-wall">
+    <div class="big-icon">🔐</div>
+    <h2 class="h2 mb-8">Требуется авторизация</h2>
+    <p class="muted mb-24" style="max-width:400px;margin:0 auto 24px">Войдите через Discord чтобы управлять настройками бота на своих серверах</p>
+    <button class="btn btn-discord btn-lg" onclick="openModal('login-modal')">
+      <svg width="20" height="15" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9Z"/></svg>
       Войти через Discord
     </button>
   </div>
 
-  <!-- LOGGED IN STATE (hidden by default) -->
-  <div id="dash-auth" style="display:none;padding-bottom:80px;">
-    <div class="dash-header">
-      <img id="dash-avatar" class="dash-avatar" src="" alt="">
-      <div class="dash-user-info">
-        <h3 id="dash-username">Загрузка...</h3>
-        <p id="dash-tag">@username</p>
+  <!-- LOGGED IN -->
+  <div id="dash-auth" style="display:none">
+    <!-- Server picker or settings -->
+    <div id="server-picker-view">
+      <div style="padding:32px 0 20px">
+        <h2 class="h2">Выбери <span class="grad-txt">сервер</span></h2>
+        <p class="section-sub" style="margin-bottom:24px">Серверы, где есть VioletBot и у вас права администратора</p>
       </div>
-      <div class="dash-badge">✅ Авторизован</div>
-      <button class="btn btn-ghost" onclick="logout()" style="margin-left:12px;">Выйти</button>
+      <div class="grid-4" id="server-grid"></div>
     </div>
 
-    <div class="section-sub" style="margin-bottom:20px;">Выберите сервер для настройки:</div>
-    <div class="server-grid" id="server-grid"></div>
+    <!-- Server settings view -->
+    <div id="server-settings-view" style="display:none">
+      <div class="dash-layout">
+        <!-- SIDEBAR -->
+        <div class="dash-sidebar">
+          <div class="sidebar-card">
+            <div class="user-info-box">
+              <div class="user-ava" id="sidebar-ava" style="background:linear-gradient(135deg,#a855f7,#f472b6)">U</div>
+              <div class="h4" id="sidebar-uname">User</div>
+              <div class="small muted2" id="sidebar-utag">@user</div>
+            </div>
+            <nav class="sidebar-nav" id="sidebar-nav">
+              <button class="sidebar-link act" onclick="showSection('overview')"><span class="s-icon">📊</span> Обзор</button>
+              <button class="sidebar-link" onclick="showSection('moderation')"><span class="s-icon">🛡️</span> Модерация</button>
+              <button class="sidebar-link" onclick="showSection('music')"><span class="s-icon">🎵</span> Музыка</button>
+              <button class="sidebar-link" onclick="showSection('economy')"><span class="s-icon">💰</span> Экономика</button>
+              <button class="sidebar-link" onclick="showSection('levels')"><span class="s-icon">⬆️</span> Уровни</button>
+              <button class="sidebar-link" onclick="showSection('welcome')"><span class="s-icon">👋</span> Приветствие</button>
+              <button class="sidebar-link" onclick="showSection('giveaways')"><span class="s-icon">🎉</span> Конкурсы</button>
+              <button class="sidebar-link" onclick="showSection('roles')"><span class="s-icon">🎭</span> Роли</button>
+              <button class="sidebar-link" onclick="showSection('custom-cmds')"><span class="s-icon">🔧</span> Кастом-команды<div class="notif-dot" id="custom-dot"></div></button>
+              <button class="sidebar-link" onclick="showSection('bot-settings')"><span class="s-icon">⚙️</span> Бот</button>
+              <button class="sidebar-link" onclick="showSection('logs')"><span class="s-icon">📋</span> Логи</button>
+            </nav>
+          </div>
+          <div class="sidebar-card" style="padding:16px">
+            <div class="xs muted2 mb-8">Выбранный сервер</div>
+            <div class="flex items-center gap-8">
+              <div id="mini-srv-icon" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#f472b6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;">S</div>
+              <div>
+                <div class="small" id="mini-srv-name" style="font-weight:600">Сервер</div>
+                <div class="xs muted2" id="mini-srv-members">— участников</div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm w-full mt-12" onclick="backToServers()">← Сменить сервер</button>
+          </div>
+        </div>
 
-    <div class="settings-panel" id="settings-panel" style="display:none;">
-      <h3 id="settings-title">⚙️ Настройки сервера</h3>
+        <!-- MAIN SETTINGS -->
+        <div class="dash-main">
 
-      <div class="stats-row" id="server-stats">
-        <div class="stat-box"><div class="num" id="stat-members">—</div><div class="lbl">Участников</div></div>
-        <div class="stat-box"><div class="num" id="stat-channels">—</div><div class="lbl">Каналов</div></div>
-        <div class="stat-box"><div class="num" id="stat-cmds">—</div><div class="lbl">Команд за день</div></div>
-      </div>
+          <!-- OVERVIEW -->
+          <div class="settings-section act" id="sec-overview">
+            <div class="section-head">
+              <div class="section-head-icon">📊</div>
+              <div><h3 class="h3">Обзор сервера</h3><p class="muted small">Статистика и быстрые настройки</p></div>
+            </div>
+            <div class="srv-stats">
+              <div class="srv-stat"><div class="srv-stat-num" id="ov-members">—</div><div class="srv-stat-lbl">Участников</div></div>
+              <div class="srv-stat"><div class="srv-stat-num" id="ov-channels">—</div><div class="srv-stat-lbl">Каналов</div></div>
+              <div class="srv-stat"><div class="srv-stat-num" id="ov-cmds">—</div><div class="srv-stat-lbl">Команд сегодня</div></div>
+            </div>
+            <div class="grid-2">
+              <div class="card"><h4 class="h4 mb-8">🎵 Музыка</h4><p class="muted small mb-12">Статус: <span style="color:#22c55e">● Активна</span></p><div class="progress"><div class="progress-fill" style="width:65%"></div></div><p class="xs muted2 mt-8">Нагрузка: 65%</p></div>
+              <div class="card"><h4 class="h4 mb-8">💰 Экономика</h4><p class="muted small mb-12">Транзакций сегодня: <b>127</b></p><div class="progress"><div class="progress-fill" style="width:40%"></div></div><p class="xs muted2 mt-8">Активность: 40%</p></div>
+              <div class="card"><h4 class="h4 mb-8">⚠️ Модерация</h4><p class="muted small mb-12">Нарушений за 7 дней: <b id="ov-violations">0</b></p><button class="btn btn-secondary btn-sm" onclick="showSection('logs')">Открыть логи</button></div>
+              <div class="card"><h4 class="h4 mb-8">🎉 Конкурсы</h4><p class="muted small mb-12">Активных: <b id="ov-giveaways">0</b></p><button class="btn btn-primary btn-sm" onclick="openModal('create-gw-modal')">+ Создать конкурс</button></div>
+            </div>
+          </div>
 
-      <!-- MODERATION -->
-      <h4 style="color:var(--v-lavender);font-family:'Syne',sans-serif;margin:24px 0 12px;">🛡️ Модерация</h4>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Авто-мут за спам</h4><p>Замутить пользователя при 5+ сообщениях за 5 секунд</p></div>
-        <div class="toggle on" id="toggle-antispam" onclick="toggleSetting(this)"></div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Фильтр ненормативной лексики</h4><p>Автоудаление сообщений с матом</p></div>
-        <div class="toggle" id="toggle-filter" onclick="toggleSetting(this)"></div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Лог модерации</h4><p>Канал для записи действий модераторов</p></div>
-        <select class="setting-select">
-          <option>🚫 Отключён</option>
-          <option>#mod-log</option>
-          <option>#audit-log</option>
-          <option>#admin</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Антирейд</h4><p>Блокировать новых участников при массовом вступлении</p></div>
-        <div class="toggle on" id="toggle-antiraid" onclick="toggleSetting(this)"></div>
-      </div>
+          <!-- MODERATION -->
+          <div class="settings-section" id="sec-moderation">
+            <div class="section-head"><div class="section-head-icon">🛡️</div><div><h3 class="h3">Модерация</h3><p class="muted small">Автоматическая защита сервера</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Анти-спам</h4><p>Автомьют при 5+ сообщениях за 5 секунд</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Мьют за спам (время)</h4><p>На сколько мьютить нарушителя</p></div><select class="set-select"><option>30 сек.</option><option selected>5 мин.</option><option>10 мин.</option><option>1 час</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Антирейд</h4><p>Блокировать новых участников при массовом вступлении (5+ за минуту)</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Фильтр ссылок</h4><p>Удалять сообщения с подозрительными ссылками</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Фильтр слов</h4><p>Автоудаление сообщений с запрещёнными словами</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Запрещённые слова</h4><p>Добавьте слова для фильтрации</p></div></div>
+              <div class="tag-input-wrap" id="bad-words-wrap" onclick="document.getElementById('bad-word-input').focus()">
+                <div class="tag">мат1<button class="tag-del" onclick="removeTag(this)">×</button></div>
+                <div class="tag">плохое_слово<button class="tag-del" onclick="removeTag(this)">×</button></div>
+                <input class="tag-input" id="bad-word-input" placeholder="Добавить слово..." onkeydown="addTag(event)">
+              </div>
+              <div class="form-hint">Нажмите Enter или запятую для добавления</div>
+              <div class="setting-row"><div class="setting-info"><h4>Канал логов модерации</h4><p>Куда отправлять уведомления о наказаниях</p></div><select class="set-select"><option>🚫 Выкл.</option><option selected>#mod-log</option><option>#audit</option><option>#admin</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Уведомлять в ЛС</h4><p>Отправлять ЛС при бане/муте/кике</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+            <div class="card mt-20">
+              <h4 class="h4 mb-16">⚠️ Автонаказания за предупреждения</h4>
+              <div class="setting-row"><div class="setting-info"><h4>2 предупреждения</h4></div><select class="set-select"><option>Ничего</option><option selected>Мьют 30 мин.</option><option>Мьют 1 час</option><option>Кик</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>3 предупреждения</h4></div><select class="set-select"><option>Ничего</option><option>Мьют</option><option selected>Кик</option><option>Бан</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Сброс предупреждений</h4><p>Автоматически сбрасывать через</p></div><select class="set-select"><option>Никогда</option><option>7 дней</option><option selected>30 дней</option><option>90 дней</option></select></div>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить настройки модерации</button>
+          </div>
 
-      <!-- ECONOMY -->
-      <h4 style="color:var(--v-lavender);font-family:'Syne',sans-serif;margin:24px 0 12px;">💰 Экономика</h4>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Экономика включена</h4><p>Разрешить использование монет и магазина</p></div>
-        <div class="toggle on" id="toggle-eco" onclick="toggleSetting(this)"></div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Стартовый баланс</h4><p>Монеты при первом взаимодействии</p></div>
-        <select class="setting-select">
-          <option>50 монет</option>
-          <option selected>100 монет</option>
-          <option>200 монет</option>
-          <option>500 монет</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Ежедневная награда</h4><p>Диапазон ежедневных монет</p></div>
-        <select class="setting-select">
-          <option>10–50</option>
-          <option selected>50–200</option>
-          <option>100–500</option>
-        </select>
-      </div>
+          <!-- MUSIC -->
+          <div class="settings-section" id="sec-music">
+            <div class="section-head"><div class="section-head-icon">🎵</div><div><h3 class="h3">Музыка</h3><p class="muted small">Настройки музыкального плеера</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Музыка включена</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Только DJ-роль может управлять</h4><p>Только участники с ролью DJ могут использовать команды музыки</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Роль DJ</h4></div><select class="set-select"><option>@everyone</option><option>@DJ</option><option>@Модератор</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Громкость по умолчанию</h4></div><select class="set-select"><option>30%</option><option>50%</option><option selected>70%</option><option>100%</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Макс. длина трека</h4></div><select class="set-select"><option>5 мин.</option><option>10 мин.</option><option selected>30 мин.</option><option>Без лимита</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Авто-отключение</h4><p>Выходить из канала при пустой очереди</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Авто-отключение (время)</h4></div><select class="set-select"><option>1 мин.</option><option selected>5 мин.</option><option>10 мин.</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Плейлисты YouTube</h4><p>Разрешить добавление целых плейлистов</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить настройки музыки</button>
+          </div>
 
-      <!-- LEVELS -->
-      <h4 style="color:var(--v-lavender);font-family:'Syne',sans-serif;margin:24px 0 12px;">⬆️ Уровни</h4>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Оповещения о повышении</h4><p>Сообщение при повышении уровня</p></div>
-        <div class="toggle on" id="toggle-lvl" onclick="toggleSetting(this)"></div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>XP за сообщение</h4><p>Количество XP за каждое сообщение</p></div>
-        <select class="setting-select">
-          <option>1–5 XP</option>
-          <option selected>5–15 XP</option>
-          <option>10–25 XP</option>
-        </select>
-      </div>
+          <!-- ECONOMY -->
+          <div class="settings-section" id="sec-economy">
+            <div class="section-head"><div class="section-head-icon">💰</div><div><h3 class="h3">Экономика</h3><p class="muted small">Настройки виртуальной валюты</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Экономика включена</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Название валюты</h4></div><input class="set-input" style="width:120px" value="💜 монет" placeholder="монет"></div>
+              <div class="setting-row"><div class="setting-info"><h4>Стартовый баланс</h4></div><input class="set-input" type="number" value="100" style="width:100px"></div>
+              <div class="setting-row"><div class="setting-info"><h4>Ежедневная награда</h4></div><div class="flex gap-8"><input class="set-input" type="number" value="50" style="width:80px" placeholder="мин">–<input class="set-input" type="number" value="200" style="width:80px" placeholder="макс"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Макс. перевод за раз</h4></div><input class="set-input" type="number" value="10000" style="width:120px"></div>
+            </div>
+            <div class="card mt-20">
+              <h4 class="h4 mb-16">🛒 Магазин</h4>
+              <div id="shop-items-list">
+                <div class="shop-item-row"><span class="shop-item-emoji">👑</span><div style="flex:1"><div class="small" style="font-weight:600">VIP статус</div><div class="xs muted2">Роль VIP</div></div><input class="set-input" type="number" value="1000" style="width:90px"><div class="tog on" onclick="this.classList.toggle('on')" style="margin-left:8px"></div></div>
+                <div class="shop-item-row"><span class="shop-item-emoji">🎨</span><div style="flex:1"><div class="small" style="font-weight:600">Цветной ник</div><div class="xs muted2">Роль с цветом</div></div><input class="set-input" type="number" value="500" style="width:90px"><div class="tog on" onclick="this.classList.toggle('on')" style="margin-left:8px"></div></div>
+                <div class="shop-item-row"><span class="shop-item-emoji">⚡</span><div style="flex:1"><div class="small" style="font-weight:600">XP Boost ×2</div><div class="xs muted2">7 дней буста</div></div><input class="set-input" type="number" value="800" style="width:90px"><div class="tog on" onclick="this.classList.toggle('on')" style="margin-left:8px"></div></div>
+                <div class="shop-item-row"><span class="shop-item-emoji">🎵</span><div style="flex:1"><div class="small" style="font-weight:600">DJ-роль</div><div class="xs muted2">Управление музыкой</div></div><input class="set-input" type="number" value="600" style="width:90px"><div class="tog on" onclick="this.classList.toggle('on')" style="margin-left:8px"></div></div>
+              </div>
+              <button class="btn btn-secondary btn-sm mt-12" onclick="addShopItem()">+ Добавить предмет</button>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить экономику</button>
+          </div>
 
-      <!-- WELCOME -->
-      <h4 style="color:var(--v-lavender);font-family:'Syne',sans-serif;margin:24px 0 12px;">👋 Приветствия</h4>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Приветственное сообщение</h4><p>Отправлять сообщение при вступлении участника</p></div>
-        <div class="toggle on" id="toggle-welcome" onclick="toggleSetting(this)"></div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Канал приветствий</h4></div>
-        <select class="setting-select">
-          <option selected>#general</option>
-          <option>#welcome</option>
-          <option>#вход</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Авто-роль для новичков</h4><p>Роль, выдаваемая автоматически при входе</p></div>
-        <select class="setting-select">
-          <option selected>🚫 Отключено</option>
-          <option>@Участник</option>
-          <option>@Новичок</option>
-          <option>@Member</option>
-        </select>
-      </div>
+          <!-- LEVELS -->
+          <div class="settings-section" id="sec-levels">
+            <div class="section-head"><div class="section-head-icon">⬆️</div><div><h3 class="h3">Уровни & XP</h3><p class="muted small">Система прогрессии участников</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Система уровней включена</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Оповещение об уровне</h4><p>Сообщать участнику при повышении</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Куда отправлять оповещение</h4></div><select class="set-select"><option selected>В текущий канал</option><option>В ЛС</option><option>#levels</option><option>#общий</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>XP за сообщение</h4></div><div class="flex gap-8"><input class="set-input" type="number" value="5" style="width:70px">–<input class="set-input" type="number" value="15" style="width:70px"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Кулдаун XP</h4><p>Минимальное время между начислением XP</p></div><select class="set-select"><option>Нет</option><option selected>60 сек.</option><option>5 мин.</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>XP игнорировать каналы</h4><p>В этих каналах XP не начисляется</p></div><select class="set-select"><option selected>Нет исключений</option><option>#bot-commands</option><option>#spam</option></select></div>
+            </div>
+            <div class="card mt-20">
+              <h4 class="h4 mb-16">🏆 Награды за уровни</h4>
+              <div id="level-rewards-list" style="display:flex;flex-direction:column;gap:8px">
+                <div class="shop-item-row"><div style="flex:1"><span class="muted2 xs">Уровень</span><input class="set-input" type="number" value="5" style="width:60px;margin:0 8px"></div><div style="flex:2"><span class="muted2 xs">Роль</span><select class="set-select" style="margin-left:8px"><option>@Участник</option><option>@Активный</option><option>@VIP</option></select></div><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button></div>
+                <div class="shop-item-row"><div style="flex:1"><span class="muted2 xs">Уровень</span><input class="set-input" type="number" value="10" style="width:60px;margin:0 8px"></div><div style="flex:2"><span class="muted2 xs">Роль</span><select class="set-select" style="margin-left:8px"><option>@Участник</option><option selected>@Активный</option><option>@VIP</option></select></div><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button></div>
+              </div>
+              <button class="btn btn-secondary btn-sm mt-12" onclick="addLevelReward()">+ Добавить награду</button>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить уровни</button>
+          </div>
 
-      <!-- PREFIX -->
-      <h4 style="color:var(--v-lavender);font-family:'Syne',sans-serif;margin:24px 0 12px;">🤖 Бот</h4>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Префикс команд</h4><p>Символ перед командами (например !help)</p></div>
-        <select class="setting-select">
-          <option selected>!</option>
-          <option>.</option>
-          <option>-</option>
-          <option>$</option>
-          <option>?</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><h4>Мини-игры включены</h4><p>Разрешить команды игр на сервере</p></div>
-        <div class="toggle on" id="toggle-games" onclick="toggleSetting(this)"></div>
-      </div>
+          <!-- WELCOME -->
+          <div class="settings-section" id="sec-welcome">
+            <div class="section-head"><div class="section-head-icon">👋</div><div><h3 class="h3">Приветствие & Прощание</h3><p class="muted small">Сообщения при входе/выходе участников</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Приветственное сообщение</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Канал приветствий</h4></div><select class="set-select"><option selected>#general</option><option>#welcome</option><option>#вход</option></select></div>
+              <div class="form-group">
+                <label class="form-label">Текст приветствия</label>
+                <textarea class="form-input" rows="3" placeholder="Привет, {mention}! Добро пожаловать на {server}!">Привет, {mention}! Добро пожаловать на **{server}**! 🎉 Нас теперь **{count}** участников!</textarea>
+                <div class="form-hint">Переменные: {mention} {name} {server} {count}</div>
+              </div>
+              <div class="setting-row"><div class="setting-info"><h4>Авторолли новичкам</h4><p>Роль, которая выдаётся автоматически</p></div><select class="set-select"><option selected>Нет</option><option>@Участник</option><option>@Новичок</option></select></div>
+            </div>
+            <div class="card mt-20">
+              <div class="setting-row"><div class="setting-info"><h4>Сообщение о выходе</h4></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Канал прощаний</h4></div><select class="set-select"><option selected>#general</option><option>#bye</option></select></div>
+              <div class="form-group mt-12">
+                <label class="form-label">Текст прощания</label>
+                <textarea class="form-input" rows="2">**{name}** покинул сервер 👋 Теперь нас {count} участников.</textarea>
+              </div>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить приветствия</button>
+          </div>
 
-      <button class="btn-save" id="save-btn" onclick="saveSettings()">💾 Сохранить настройки</button>
-    </div>
+          <!-- GIVEAWAYS -->
+          <div class="settings-section" id="sec-giveaways">
+            <div class="section-head"><div class="section-head-icon">🎉</div><div><h3 class="h3">Конкурсы</h3><p class="muted small">Управление розыгрышами</p></div></div>
+            <div class="card mb-20">
+              <div class="flex items-center justify-between mb-16">
+                <h4 class="h4">Активные конкурсы</h4>
+                <button class="btn btn-primary btn-sm" onclick="openModal('create-gw-modal')">+ Создать</button>
+              </div>
+              <div id="giveaways-list">
+                <div class="cmd-row"><div style="flex:1"><div class="small" style="font-weight:600">🎁 Нитро x1</div><div class="xs muted2">Заканчивается через 2 дня 4 часа · 127 участников</div></div><div class="flex gap-8"><button class="btn btn-secondary btn-sm" onclick="toast('Победители перевыбраны!')">Рерол</button><button class="btn btn-danger btn-sm" onclick="this.closest('.cmd-row').remove();toast('Конкурс завершён')">Завершить</button></div></div>
+                <div class="cmd-row mt-8"><div style="flex:1"><div class="small" style="font-weight:600">💰 1000 монет</div><div class="xs muted2">Заканчивается через 5 часов · 43 участника</div></div><div class="flex gap-8"><button class="btn btn-secondary btn-sm" onclick="toast('Победители перевыбраны!')">Рерол</button><button class="btn btn-danger btn-sm" onclick="this.closest('.cmd-row').remove();toast('Конкурс завершён')">Завершить</button></div></div>
+              </div>
+            </div>
+            <div class="card">
+              <h4 class="h4 mb-16">⚙️ Настройки конкурсов</h4>
+              <div class="setting-row"><div class="setting-info"><h4>Эмодзи участия</h4></div><input class="set-input" value="🎉" style="width:60px;text-align:center;font-size:18px"></div>
+              <div class="setting-row"><div class="setting-info"><h4>Уведомлять победителей в ЛС</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Требования для участия</h4><p>Роль, необходимая для участия</p></div><select class="set-select"><option selected>Нет требований</option><option>@Участник</option><option>@Активный</option></select></div>
+            </div>
+          </div>
+
+          <!-- ROLES -->
+          <div class="settings-section" id="sec-roles">
+            <div class="section-head"><div class="section-head-icon">🎭</div><div><h3 class="h3">Роли</h3><p class="muted small">Управление авторолями и реакциями</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Авторолль при входе</h4></div><select class="set-select"><option selected>Нет</option><option>@Участник</option><option>@Новичок</option><option>@Member</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Роль ботов</h4><p>Автоматически выдаётся ботам</p></div><select class="set-select"><option selected>Нет</option><option>@Bots</option><option>@Bot</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Восстановление ролей</h4><p>Возвращать роли вернувшимся участникам</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+            <div class="card mt-20">
+              <div class="flex items-center justify-between mb-16">
+                <h4 class="h4">🙋 Роли-реакции</h4>
+                <button class="btn btn-primary btn-sm" onclick="toast('Скоро: создание ролей-реакций')">+ Добавить</button>
+              </div>
+              <div class="cmd-row"><span style="font-size:20px">🎮</span><div style="flex:1;margin-left:12px"><div class="small" style="font-weight:600">@Геймер</div><div class="xs muted2">#роли · Сообщение: 1234567890</div></div><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button></div>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить роли</button>
+          </div>
+
+          <!-- CUSTOM COMMANDS -->
+          <div class="settings-section" id="sec-custom-cmds">
+            <div class="section-head"><div class="section-head-icon">🔧</div><div><h3 class="h3">Кастомные команды</h3><p class="muted small">Создайте уникальные команды для вашего сервера</p></div></div>
+            <div class="card mb-20">
+              <div class="flex items-center justify-between mb-16">
+                <h4 class="h4">Список команд</h4>
+                <button class="btn btn-primary btn-sm" onclick="openModal('add-cmd-modal')">+ Добавить</button>
+              </div>
+              <div class="custom-cmd-list" id="custom-cmds-list">
+                <div class="custom-cmd-item"><span class="cmd-trigger">!правила</span><span class="cmd-response-preview">Правила сервера: 1. Уважайте друг друга 2. Нет спама...</span><button class="btn btn-ghost btn-sm" onclick="editCmd(this)">✏️</button><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();toast('Команда удалена')">×</button></div>
+                <div class="custom-cmd-item"><span class="cmd-trigger">!discord</span><span class="cmd-response-preview">Приглашение: https://discord.gg/example</span><button class="btn btn-ghost btn-sm" onclick="editCmd(this)">✏️</button><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();toast('Команда удалена')">×</button></div>
+                <div class="custom-cmd-item"><span class="cmd-trigger">!соц</span><span class="cmd-response-preview">Наши соцсети: Instagram, TikTok, YouTube...</span><button class="btn btn-ghost btn-sm" onclick="editCmd(this)">✏️</button><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();toast('Команда удалена')">×</button></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOT SETTINGS -->
+          <div class="settings-section" id="sec-bot-settings">
+            <div class="section-head"><div class="section-head-icon">⚙️</div><div><h3 class="h3">Настройки бота</h3><p class="muted small">Основные параметры</p></div></div>
+            <div class="card">
+              <div class="setting-row"><div class="setting-info"><h4>Префикс команд</h4><p>Символ перед командами (! . - $ ?)</p></div><input class="set-input" value="!" style="width:60px;text-align:center;font-size:20px;font-weight:700"></div>
+              <div class="setting-row"><div class="setting-info"><h4>Язык бота</h4><p>Язык ответов бота</p></div><select class="set-select"><option selected>🇷🇺 Русский</option><option>🇺🇸 English</option><option>🇺🇦 Українська</option></select></div>
+              <div class="setting-row"><div class="setting-info"><h4>Мини-игры включены</h4></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Разрешить игры в ЛС</h4></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Удалять команды</h4><p>Удалять сообщение с командой после выполнения</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+              <div class="setting-row"><div class="setting-info"><h4>Бот игнорирует каналы</h4></div><select class="set-select"><option selected>Нет</option><option>#общий</option><option>#новости</option></select></div>
+            </div>
+            <div class="card mt-20">
+              <h4 class="h4 mb-16">🎨 Цвет бота</h4>
+              <div class="palette">
+                <div class="pal-dot act" style="background:#a855f7" onclick="selectColor(this,'#a855f7')" title="Фиолетовый"></div>
+                <div class="pal-dot" style="background:#f472b6" onclick="selectColor(this,'#f472b6')" title="Розовый"></div>
+                <div class="pal-dot" style="background:#fb7185" onclick="selectColor(this,'#fb7185')" title="Розово-красный"></div>
+                <div class="pal-dot" style="background:#c084fc" onclick="selectColor(this,'#c084fc')" title="Лавандовый"></div>
+                <div class="pal-dot" style="background:#3b82f6" onclick="selectColor(this,'#3b82f6')" title="Синий"></div>
+                <div class="pal-dot" style="background:#10b981" onclick="selectColor(this,'#10b981')" title="Зелёный"></div>
+                <div class="pal-dot" style="background:#f59e0b" onclick="selectColor(this,'#f59e0b')" title="Золотой"></div>
+                <div class="pal-dot" style="background:#ef4444" onclick="selectColor(this,'#ef4444')" title="Красный"></div>
+              </div>
+            </div>
+            <button class="save-btn" onclick="saveSetting(this)">💾 Сохранить настройки бота</button>
+          </div>
+
+          <!-- LOGS -->
+          <div class="settings-section" id="sec-logs">
+            <div class="section-head"><div class="section-head-icon">📋</div><div><h3 class="h3">Логи модерации</h3><p class="muted small">История действий на сервере</p></div></div>
+            <div class="tabs">
+              <button class="tab act" onclick="filterLogs('all',this)">Все</button>
+              <button class="tab" onclick="filterLogs('ban',this)">Баны</button>
+              <button class="tab" onclick="filterLogs('mute',this)">Мьюты</button>
+              <button class="tab" onclick="filterLogs('kick',this)">Кики</button>
+              <button class="tab" onclick="filterLogs('warn',this)">Предупреждения</button>
+            </div>
+            <div id="logs-container">
+              <div class="log-item" data-type="ban"><span class="log-badge log-ban">БАН</span><div><strong>SomeUser#1234</strong> был забанен<br><span class="xs muted2">Причина: Спам · Модератор: Admin · 2 мин назад</span></div></div>
+              <div class="log-item" data-type="mute"><span class="log-badge log-mute">МЬЮТ</span><div><strong>OtherUser#5678</strong> замьючен на 30 мин.<br><span class="xs muted2">Причина: Флуд · Модератор: Mod · 15 мин назад</span></div></div>
+              <div class="log-item" data-type="warn"><span class="log-badge log-warn">ПРЕД</span><div><strong>NewUser#9012</strong> получил предупреждение (2/3)<br><span class="xs muted2">Причина: Оффтоп · Модератор: Admin · 1 час назад</span></div></div>
+              <div class="log-item" data-type="kick"><span class="log-badge log-kick">КИК</span><div><strong>Troll#0000</strong> кикнут<br><span class="xs muted2">Причина: Нарушение правил · Модератор: Admin · 3 часа назад</span></div></div>
+              <div class="log-item" data-type="ban"><span class="log-badge log-ban">БАН</span><div><strong>Spammer#1111</strong> забанен на 7 дней<br><span class="xs muted2">Причина: Реклама · Модератор: Mod · Вчера</span></div></div>
+            </div>
+          </div>
+
+        </div><!-- /dash-main -->
+      </div><!-- /dash-layout -->
+    </div><!-- /server-settings-view -->
+  </div><!-- /dash-auth -->
+</div>
+</div><!-- /page-dashboard -->
+
+<!-- ═══════════════════════════════════ MODALS ═══════════════════════════════════ -->
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="login-modal">
+<div class="modal">
+  <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+  <h2 class="h3 mb-8">Войти в VioletBot</h2>
+  <p class="muted small mb-24">Введите ваш Discord никнейм — ИИ проверит существование профиля</p>
+
+  <div class="tabs" id="login-tabs">
+    <button class="tab act" onclick="switchLoginTab('manual',this)">Ввод никнейма</button>
+    <button class="tab" onclick="switchLoginTab('qr',this)">QR-код</button>
   </div>
-</div>
-</div>
 
-<!-- ═══════════════════════════════════════ LOGIN MODAL -->
-<div class="modal-overlay" id="login-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h2>🌸 Войти в VioletBot</h2>
-    <p>Введите ваш Discord тег (например <strong>username#1234</strong> или просто <strong>username</strong>) — ИИ проверит профиль автоматически</p>
-
+  <!-- MANUAL TAB -->
+  <div id="login-tab-manual">
     <div class="form-group">
-      <label class="form-label">Discord тег или имя пользователя</label>
-      <div style="display:flex;gap:8px;">
-        <input class="form-input" id="discord-input" placeholder="username или user#1234" oninput="onDiscordInput()" autocomplete="off"/>
-        <button class="btn btn-primary" onclick="checkProfile()" style="white-space:nowrap;">
-          Проверить
-        </button>
+      <label class="form-label">Discord никнейм</label>
+      <div class="flex gap-8">
+        <input class="form-input" id="disc-input" placeholder="username или user#1234" autocomplete="off">
+        <button class="btn btn-primary" onclick="checkDiscordAI()">Проверить</button>
       </div>
     </div>
-
-    <div class="ai-checker" id="ai-result-area"></div>
-
-    <div style="margin-top:24px;display:flex;gap:10px;">
-      <button class="btn btn-discord" onclick="simulateOAuth()" id="login-btn" style="flex:1;justify-content:center;" disabled>
-        <svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9ZM23.7 38.2c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.5 0 6.4 3.2 6.3 7.2 0 4-2.8 7.2-6.3 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.4 3.2 6.3 7.2c0 4-2.8 7.2-6.3 7.2Z"/></svg>
-        Войти через Discord
-      </button>
-      <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
-    </div>
-
-    <p style="font-size:12px;color:var(--text3);margin-top:16px;text-align:center;">
-      🤖 ИИ анализирует профиль: формат, реалистичность имени и наличие аккаунта
-    </p>
+    <div id="ai-check-result"></div>
+    <button class="btn btn-discord w-full mt-16" id="login-proceed-btn" disabled onclick="doLogin()">
+      <svg width="18" height="13" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.6a40.5 40.5 0 0 0-1.8 3.7 54.3 54.3 0 0 0-16.3 0A38.2 38.2 0 0 0 25.5.6 58.4 58.4 0 0 0 10.9 5C1.6 19.1-1 32.8.3 46.3a58.9 58.9 0 0 0 18 9.1 44.3 44.3 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9c.5-.4 1-.7 1.5-1.1a41.9 41.9 0 0 0 35.8 0c.5.4 1 .7 1.5 1.1a38.4 38.4 0 0 1-6 2.9 44 44 0 0 0 3.8 6.2 58.7 58.7 0 0 0 18-9.1C72.2 30.7 68.2 17.1 60.1 4.9Z"/></svg>
+      Войти через Discord
+    </button>
   </div>
+
+  <!-- QR TAB -->
+  <div id="login-tab-qr" style="display:none">
+    <div class="qr-box">
+      <div id="qr-anim" style="height:4px;border-radius:99px;background:var(--grad);margin-bottom:12px;animation:qrpulse 1.5s ease-in-out infinite;opacity:.7"></div>
+      <canvas id="qr-canvas" width="160" height="160" style="border-radius:12px;display:block;margin:0 auto"></canvas>
+      <p class="small muted mt-12">Откройте Discord → Настройки → Войти через QR</p>
+      <div class="qr-expire mt-8">Истекает через <span id="qr-timer">120</span> сек.</div>
+    </div>
+    <button class="btn btn-secondary w-full" onclick="refreshQR()">🔄 Обновить QR</button>
+  </div>
+  <p class="xs muted2 text-center mt-12">🤖 Анализ профиля выполняет ИИ на базе Claude</p>
+</div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="logo" style="justify-content:center;margin-bottom:16px;display:flex;">
-      <svg viewBox="0 0 32 32" fill="none" width="24" height="24">
-        <circle cx="16" cy="16" r="15" fill="url(#lg2)"/>
-        <path d="M10 20c1.5-4 6-6 12-4M10 12c2-1 4.5-.5 6 1.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        <defs><linearGradient id="lg2" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#a855f7"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
-      </svg>
-      <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-left:8px;">VioletBot</span>
+<!-- INVITE MODAL -->
+<div class="overlay" id="invite-modal">
+<div class="modal">
+  <button class="modal-close" onclick="closeModal('invite-modal')">✕</button>
+  <h2 class="h3 mb-8">🚀 Добавить VioletBot</h2>
+  <p class="muted small mb-20">Бот запросит следующие права:</p>
+  <ul class="perms-list">
+    <li>Управление сообщениями</li>
+    <li>Управление ролями</li>
+    <li>Управление каналами</li>
+    <li>Бан и кик участников</li>
+    <li>Подключение к голосовым каналам</li>
+    <li>Отправка сообщений и embed</li>
+    <li>Просмотр истории сообщений</li>
+  </ul>
+  <div class="form-group mt-20">
+    <label class="form-label">Выберите сервер</label>
+    <select class="form-input"><option>Выбери сервер...</option><option>My Awesome Server</option><option>Gaming Hub</option><option>Dev Community</option></select>
+  </div>
+  <button class="btn btn-primary w-full" onclick="closeModal('invite-modal');toast('Бот добавлен на сервер! 🎉')">Авторизовать VioletBot</button>
+  <p class="xs muted2 text-center mt-12">Перенаправление на авторизацию Discord OAuth2</p>
+</div>
+</div>
+
+<!-- ADD CUSTOM CMD MODAL -->
+<div class="overlay" id="add-cmd-modal">
+<div class="modal">
+  <button class="modal-close" onclick="closeModal('add-cmd-modal')">✕</button>
+  <h2 class="h3 mb-8">🔧 Новая команда</h2>
+  <p class="muted small mb-20">Создайте кастомную команду для вашего сервера</p>
+  <div class="form-group">
+    <label class="form-label">Триггер (без префикса)</label>
+    <input class="form-input" id="new-cmd-trigger" placeholder="например: правила, discord, инфо">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Ответ бота</label>
+    <textarea class="form-input" id="new-cmd-response" rows="4" placeholder="Текст ответа бота...&#10;Поддерживает {mention}, {user}, {server}"></textarea>
+    <div class="form-hint">Переменные: {mention} {user} {server} {count}</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Тип ответа</label>
+    <select class="form-input"><option>Обычное сообщение</option><option>Embed (красивый блок)</option><option>Ответить на сообщение</option></select>
+  </div>
+  <div class="flex gap-12">
+    <button class="btn btn-primary" style="flex:1" onclick="saveCustomCmd()">Сохранить команду</button>
+    <button class="btn btn-secondary" onclick="closeModal('add-cmd-modal')">Отмена</button>
+  </div>
+</div>
+</div>
+
+<!-- CREATE GIVEAWAY MODAL -->
+<div class="overlay" id="create-gw-modal">
+<div class="modal">
+  <button class="modal-close" onclick="closeModal('create-gw-modal')">✕</button>
+  <h2 class="h3 mb-8">🎉 Создать конкурс</h2>
+  <div class="form-group">
+    <label class="form-label">Приз</label>
+    <input class="form-input" id="gw-prize" placeholder="Нитро, 1000 монет, роль VIP...">
+  </div>
+  <div class="flex gap-12">
+    <div class="form-group" style="flex:1">
+      <label class="form-label">Время (напр. 1д 2ч)</label>
+      <input class="form-input" id="gw-duration" placeholder="1д, 12ч, 30м">
     </div>
-    <p>Сделано с 💜 &nbsp;·&nbsp; <a href="#">Документация</a> &nbsp;·&nbsp; <a href="#">Discord сервер</a> &nbsp;·&nbsp; <a href="#">GitHub</a></p>
+    <div class="form-group" style="flex:1">
+      <label class="form-label">Победителей</label>
+      <input class="form-input" id="gw-winners" type="number" value="1" min="1" max="20">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Канал</label>
+    <select class="form-input"><option>#general</option><option selected>#конкурсы</option><option>#giveaways</option></select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Требования для участия</label>
+    <select class="form-input"><option selected>Нет</option><option>Быть подписчиком @роль</option><option>Иметь уровень 5+</option></select>
+  </div>
+  <button class="btn btn-primary w-full" onclick="createGiveaway()">🎉 Создать конкурс</button>
+</div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="logo" style="justify-content:center;margin-bottom:14px">
+      <svg width="22" height="22" viewBox="0 0 32 32"><defs><linearGradient id="lg3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="url(#lg3)"/><path d="M10 20c1.5-4.5 6.5-6.5 12.5-4M10.5 12.5c2-1.2 4.5-.6 6 1.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      <span class="logo-text">VioletBot</span>
+    </div>
+    <p>Сделано с 💜 · <a href="#">Документация</a> · <a href="#">Discord сервер</a> · <a href="#">GitHub</a></p>
   </div>
 </footer>
 
+<style>@keyframes qrpulse{0%,100%{opacity:.4}50%{opacity:1}}</style>
+
 <script>
-// ── THEME ──
-function toggleTheme() {
-  const html = document.documentElement;
-  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('vb-theme', html.dataset.theme);
-}
-(function() {
-  const saved = localStorage.getItem('vb-theme');
-  if (saved) document.documentElement.dataset.theme = saved;
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+const STATE = {
+  theme: localStorage.getItem('vb-theme') || 'dark',
+  user: null,
+  currentServer: null,
+  servers: [
+    { id:'1', name:'My Awesome Server', members:1247, channels:34, color:'#a855f7', initial:'M' },
+    { id:'2', name:'Gaming Hub',        members:534,  channels:18, color:'#f472b6', initial:'G' },
+    { id:'3', name:'Dev Community',     members:2891, channels:52, color:'#fb7185', initial:'D' },
+    { id:'4', name:'Friends 🌸',        members:18,   channels:8,  color:'#c084fc', initial:'F' },
+  ]
+};
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+(function init() {
+  document.documentElement.dataset.theme = STATE.theme;
+  // Restore login
+  const saved = localStorage.getItem('vb-user');
+  if (saved) {
+    STATE.user = JSON.parse(saved);
+    updateNavForLogin();
+  }
 })();
 
-// ── PAGES ──
+// ═══════════════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════════════
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = STATE.theme;
+  localStorage.setItem('vb-theme', STATE.theme);
+}
+
+// ═══════════════════════════════════════════════════
+//  PAGES
+// ═══════════════════════════════════════════════════
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-pill').forEach((p, i) => {
-    p.classList.toggle('active', ['home','commands','dashboard'][i] === name);
-  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('act'));
+  document.getElementById('page-' + name).classList.add('act');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('act'));
+  document.getElementById('nl-' + name)?.classList.add('act');
   window.scrollTo(0, 0);
 }
 
-// ── MODAL ──
-function openLoginModal() {
-  document.getElementById('login-modal').classList.add('active');
+function checkDashAuth() {
+  if (STATE.user) {
+    showPage('dashboard');
+    showDashboard();
+  } else {
+    openModal('login-modal');
+    document.getElementById('nl-dashboard').classList.add('act');
+  }
 }
-function closeModal() {
-  document.getElementById('login-modal').classList.remove('active');
-  document.getElementById('ai-result-area').innerHTML = '';
-  document.getElementById('discord-input').value = '';
-  document.getElementById('login-btn').disabled = true;
+
+// ═══════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id)?.classList.add('open');
+  if (id === 'login-modal') startQRTimer();
 }
-document.getElementById('login-modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
+function closeModal(id) {
+  document.getElementById(id)?.classList.remove('open');
+}
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(o => closeModal(o.id));
 });
 
-// ── TOAST ──
-function showToast(msg) {
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+function toast(msg, icon = '💜') {
   const t = document.getElementById('toast');
+  t.querySelector('.toast-ico').textContent = icon;
   document.getElementById('toast-msg').textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ── AI PROFILE CHECKER ──
-let checkTimeout;
-function onDiscordInput() {
-  clearTimeout(checkTimeout);
-  document.getElementById('login-btn').disabled = true;
-  document.getElementById('ai-result-area').innerHTML = '';
+// ═══════════════════════════════════════════════════
+//  LOGIN TABS
+// ═══════════════════════════════════════════════════
+function switchLoginTab(tab, btn) {
+  document.querySelectorAll('#login-tabs .tab').forEach(t => t.classList.remove('act'));
+  btn.classList.add('act');
+  document.getElementById('login-tab-manual').style.display = tab === 'manual' ? 'block' : 'none';
+  document.getElementById('login-tab-qr').style.display = tab === 'qr' ? 'block' : 'none';
+  if (tab === 'qr') { drawQR(); startQRTimer(); }
 }
 
-async function checkProfile() {
-  const input = document.getElementById('discord-input').value.trim();
-  if (!input) return;
-  const area = document.getElementById('ai-result-area');
+// ═══════════════════════════════════════════════════
+//  QR CODE (simple visual simulation)
+// ═══════════════════════════════════════════════════
+let qrInterval;
+function drawQR() {
+  const c = document.getElementById('qr-canvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const sz = 160, cell = Math.floor(sz / 21);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, sz, sz);
+  const seed = Date.now();
+  // Corner squares
+  const corners = [[0,0],[0,14],[14,0]];
+  corners.forEach(([row,col]) => {
+    ctx.fillStyle = '#1a0830';
+    ctx.fillRect(col*cell, row*cell, 7*cell, 7*cell);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect((col+1)*cell, (row+1)*cell, 5*cell, 5*cell);
+    ctx.fillStyle = '#1a0830';
+    ctx.fillRect((col+2)*cell, (row+2)*cell, 3*cell, 3*cell);
+  });
+  // Random data cells
+  const rng = (n) => { let x = Math.sin(seed+n)*10000; return x - Math.floor(x); };
+  for (let r = 0; r < 21; r++) for (let c2 = 0; c2 < 21; c2++) {
+    if ((r<8&&c2<8)||(r<8&&c2>12)||(r>12&&c2<8)) continue;
+    if (rng(r*21+c2) > 0.5) {
+      ctx.fillStyle = '#1a0830';
+      ctx.fillRect(c2*cell+1, r*cell+1, cell-2, cell-2);
+    }
+  }
+}
 
-  area.innerHTML = `
-    <div class="ai-result loading">
-      <div class="spinner"></div>
-      <div class="ai-info">
-        <strong>ИИ анализирует профиль...</strong>
-        <span>Проверка формата, реалистичности и существования аккаунта</span>
-      </div>
-    </div>`;
+let qrSeconds = 120;
+function startQRTimer() {
+  clearInterval(qrInterval);
+  qrSeconds = 120;
+  qrInterval = setInterval(() => {
+    qrSeconds--;
+    const el = document.getElementById('qr-timer');
+    if (el) el.textContent = qrSeconds;
+    if (qrSeconds <= 0) { clearInterval(qrInterval); if (el) el.textContent = 'Истёк'; }
+    // Simulate scan
+    if (qrSeconds === 100 && STATE.user) {
+      clearInterval(qrInterval);
+      closeModal('login-modal');
+      toast('Вход через QR выполнен! 🎉');
+    }
+  }, 1000);
+}
+function refreshQR() { qrSeconds = 120; drawQR(); toast('QR обновлён', '🔄'); }
 
-  // Call Claude AI to validate the Discord profile
+// ═══════════════════════════════════════════════════
+//  AI DISCORD PROFILE CHECK
+// ═══════════════════════════════════════════════════
+async function checkDiscordAI() {
+  const input = document.getElementById('disc-input').value.trim();
+  if (!input) { toast('Введите никнейм', '⚠️'); return; }
+  const area = document.getElementById('ai-check-result');
+  document.getElementById('login-proceed-btn').disabled = true;
+
+  area.innerHTML = `<div class="ai-result loading">
+    <div class="spin"></div>
+    <div class="ai-info"><strong>ИИ анализирует профиль...</strong><span class="xs muted2">Проверка формата и реалистичности</span></div>
+  </div>`;
+
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        system: `You are a Discord profile validator AI for VioletBot dashboard. 
-Analyze the given Discord username/tag and determine if it looks like a valid, real Discord account.
+        max_tokens: 400,
+        system: `You are a Discord username validator for a bot dashboard. Analyze the given Discord username/tag.
 
-Rules for valid Discord username:
-- New format (2023+): 2-32 chars, letters/numbers/underscores/dots, no consecutive dots, doesn't start/end with dot
-- Old format: name + # + 4 digits (e.g. cooluser#1234)
-- Should look like a realistic username a real person would use
-- Red flags: random keyboard mashing (asdfghjkl), offensive content, test/fake patterns
+Valid Discord usernames (new format 2023+): 2-32 chars, lowercase letters/numbers/underscores/dots allowed. No consecutive dots, can't start/end with dot.
+Old format: name + # + 4 digits.
 
-Respond ONLY with valid JSON, no markdown, no backticks:
-{
-  "valid": true/false,
-  "username": "cleaned display name",
-  "discriminator": "#0000 or empty string",
-  "analysis": "one sentence explaining your decision in Russian",
-  "confidence": 0-100,
-  "avatar_color": "hex color for avatar placeholder like #a855f7"
-}`,
-        messages: [{ role: "user", content: `Check this Discord username/tag: "${input}"` }]
+Evaluate if this looks like a REAL Discord account someone would actually use. Red flags: random keyboard smashing (asdfghjkl), gibberish, test/fake patterns, offensive content.
+
+Respond ONLY with JSON (no backticks, no markdown):
+{"valid":true/false,"username":"cleaned name","discriminator":"#XXXX or empty","analysis":"one sentence in Russian","confidence":0-100,"avatar_color":"hex color like #a855f7"}`,
+        messages: [{ role: "user", content: `Validate Discord username: "${input}"` }]
       })
     });
-
     const data = await resp.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || '{}';
+    const raw = data.content?.find(b => b.type === 'text')?.text || '{}';
     let result;
-    try { result = JSON.parse(text.replace(/```json?|```/g, '').trim()); }
-    catch { result = { valid: false, analysis: "Не удалось проанализировать профиль", confidence: 0 }; }
+    try { result = JSON.parse(raw.replace(/```[a-z]*/g,'').replace(/```/g,'').trim()); }
+    catch { result = { valid: false, analysis: "Не удалось разобрать ответ ИИ", confidence: 0 }; }
 
-    const avatarLetter = (result.username || input)[0].toUpperCase();
-    const avatarBg = result.avatar_color || '#a855f7';
+    const letter = (result.username || input)[0]?.toUpperCase() || 'U';
+    const color = result.avatar_color || '#a855f7';
 
     if (result.valid) {
-      area.innerHTML = `
-        <div class="ai-result valid">
-          <div style="width:40px;height:40px;border-radius:50%;background:${avatarBg};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px;flex-shrink:0;">${avatarLetter}</div>
-          <div class="ai-info">
-            <strong>✅ ${result.username || input}${result.discriminator || ''}</strong>
-            <span>${result.analysis} (Уверенность: ${result.confidence}%)</span>
-          </div>
-        </div>`;
-      document.getElementById('login-btn').disabled = false;
-      // Store for later use
-      window._discordUser = { username: result.username || input, discriminator: result.discriminator || '', avatarColor: avatarBg };
+      area.innerHTML = `<div class="ai-result valid">
+        <div class="ai-ava" style="background:${color}">${letter}</div>
+        <div class="ai-info">
+          <strong>✅ ${result.username || input}${result.discriminator || ''}</strong>
+          <span class="xs">${result.analysis} (Уверенность: ${result.confidence}%)</span>
+        </div>
+      </div>`;
+      document.getElementById('login-proceed-btn').disabled = false;
+      window._pendingUser = { username: result.username || input, disc: result.discriminator || '', color };
     } else {
-      area.innerHTML = `
-        <div class="ai-result invalid">
-          <div style="font-size:24px;flex-shrink:0;">❌</div>
-          <div class="ai-info">
-            <strong>Профиль не прошёл проверку</strong>
-            <span>${result.analysis}</span>
-          </div>
-        </div>`;
-      document.getElementById('login-btn').disabled = true;
+      area.innerHTML = `<div class="ai-result invalid">
+        <div style="font-size:22px;flex-shrink:0">❌</div>
+        <div class="ai-info"><strong>Профиль не прошёл проверку</strong><span class="xs">${result.analysis}</span></div>
+      </div>`;
     }
   } catch(e) {
-    area.innerHTML = `<div class="ai-result invalid"><div>⚠️</div><div class="ai-info"><strong>Ошибка проверки</strong><span>Попробуйте ещё раз</span></div></div>`;
+    area.innerHTML = `<div class="ai-result invalid"><div>⚠️</div><div class="ai-info"><strong>Ошибка соединения</strong><span class="xs">Попробуйте ещё раз</span></div></div>`;
   }
 }
 
-// ── SIMULATE OAUTH (demo) ──
-function simulateOAuth() {
-  const user = window._discordUser || { username: 'DiscordUser', discriminator: '#0000', avatarColor: '#a855f7' };
-  closeModal();
-  loginUser(user);
-}
+// Enter key for check
+document.getElementById('disc-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkDiscordAI();
+});
 
-function loginUser(user) {
-  // Show dashboard
-  document.getElementById('dash-no-auth').style.display = 'none';
-  document.getElementById('dash-auth').style.display = 'block';
-
-  // Fill user info
-  const avatar = document.getElementById('dash-avatar');
-  const uname = document.getElementById('dash-username');
-  const utag = document.getElementById('dash-tag');
-
-  // Create avatar from color
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 100;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = user.avatarColor || '#a855f7';
-  ctx.beginPath(); ctx.arc(50,50,50,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 48px sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText((user.username||'U')[0].toUpperCase(), 50, 50);
-  avatar.src = canvas.toDataURL();
-
-  uname.textContent = user.username;
-  utag.textContent = user.discriminator ? `@${user.username}${user.discriminator}` : `@${user.username}`;
-
-  // Populate fake servers
-  const servers = [
-    { name: 'My Awesome Server', members: 1247, icon: null, color: '#a855f7' },
-    { name: 'Gaming Hub', members: 534, icon: null, color: '#f472b6' },
-    { name: 'Dev Community', members: 2891, icon: null, color: '#fb7185' },
-    { name: 'Friends 🌸', members: 18, icon: null, color: '#c084fc' },
-  ];
-
-  const grid = document.getElementById('server-grid');
-  grid.innerHTML = servers.map((s, i) => `
-    <div class="server-card" onclick="selectServer(this, '${s.name}', ${s.members}, ${i})">
-      <div class="no-icon" style="background:linear-gradient(135deg,${s.color},${s.color}88);">${s.name[0]}</div>
-      <h4>${s.name}</h4>
-      <p>${s.members.toLocaleString()} участников</p>
-    </div>
-  `).join('');
-
+// ═══════════════════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════════════════
+function doLogin() {
+  const user = window._pendingUser;
+  if (!user) return;
+  STATE.user = user;
+  localStorage.setItem('vb-user', JSON.stringify(user));
+  closeModal('login-modal');
+  updateNavForLogin();
   showPage('dashboard');
-  showToast('Добро пожаловать, ' + user.username + '! 🌸');
+  showDashboard();
+  toast(`Добро пожаловать, ${user.username}! 🌸`);
 }
 
-function selectServer(el, name, members, index) {
-  document.querySelectorAll('.server-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-
-  document.getElementById('settings-title').textContent = `⚙️ ${name}`;
-  document.getElementById('stat-members').textContent = members.toLocaleString();
-  document.getElementById('stat-channels').textContent = Math.floor(members/50) + 12;
-  document.getElementById('stat-cmds').textContent = Math.floor(Math.random()*500+50);
-  document.getElementById('settings-panel').style.display = 'block';
-  document.getElementById('settings-panel').scrollIntoView({behavior:'smooth',block:'start'});
+function updateNavForLogin() {
+  const loginBtn = document.querySelector('.btn-discord');
+  if (loginBtn && STATE.user) {
+    loginBtn.innerHTML = `<div style="width:22px;height:22px;border-radius:50%;background:${STATE.user.color || '#a855f7'};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff;flex-shrink:0">${STATE.user.username[0].toUpperCase()}</div><span class="hide-sm">${STATE.user.username}</span>`;
+    loginBtn.onclick = () => { showPage('dashboard'); showDashboard(); };
+  }
 }
 
 function logout() {
-  document.getElementById('dash-no-auth').style.display = 'block';
-  document.getElementById('dash-auth').style.display = 'none';
-  document.getElementById('settings-panel').style.display = 'none';
-  showToast('Вы вышли из аккаунта');
+  STATE.user = null; STATE.currentServer = null;
+  localStorage.removeItem('vb-user');
+  location.reload();
 }
 
-// ── SETTINGS ──
-function toggleSetting(el) {
-  el.classList.toggle('on');
+// ═══════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════
+function showDashboard() {
+  document.getElementById('dash-unauth').style.display = 'none';
+  document.getElementById('dash-auth').style.display = 'block';
+
+  // Fill sidebar user info
+  const u = STATE.user;
+  const ava = document.getElementById('sidebar-ava');
+  ava.textContent = u.username[0].toUpperCase();
+  ava.style.background = `linear-gradient(135deg, ${u.color || '#a855f7'}, #f472b6)`;
+  document.getElementById('sidebar-uname').textContent = u.username;
+  document.getElementById('sidebar-utag').textContent = u.disc ? `@${u.username}${u.disc}` : `@${u.username}`;
+
+  renderServers();
 }
 
-function saveSettings() {
-  const btn = document.getElementById('save-btn');
+function renderServers() {
+  document.getElementById('server-picker-view').style.display = 'block';
+  document.getElementById('server-settings-view').style.display = 'none';
+  const grid = document.getElementById('server-grid');
+  grid.innerHTML = '';
+
+  // Add bot card
+  const addCard = document.createElement('div');
+  addCard.className = 'add-server-card';
+  addCard.innerHTML = `<div class="plus">＋</div><div class="small" style="font-weight:600">Добавить бота</div><div class="xs muted2 mt-8">На новый сервер</div>`;
+  addCard.onclick = () => openModal('invite-modal');
+  grid.appendChild(addCard);
+
+  STATE.servers.forEach(srv => {
+    const card = document.createElement('div');
+    card.className = 'server-card';
+    card.innerHTML = `
+      <div class="server-ava" style="background:linear-gradient(135deg,${srv.color},${srv.color}88)">${srv.initial}</div>
+      <div class="s-name">${srv.name}</div>
+      <div class="s-meta">${srv.members.toLocaleString()} участников</div>`;
+    card.onclick = () => selectServer(srv);
+    grid.appendChild(card);
+  });
+}
+
+function selectServer(srv) {
+  STATE.currentServer = srv;
+  document.getElementById('server-picker-view').style.display = 'none';
+  document.getElementById('server-settings-view').style.display = 'block';
+
+  // Update mini info
+  const icon = document.getElementById('mini-srv-icon');
+  icon.textContent = srv.initial;
+  icon.style.background = `linear-gradient(135deg,${srv.color},${srv.color}88)`;
+  document.getElementById('mini-srv-name').textContent = srv.name;
+  document.getElementById('mini-srv-members').textContent = `${srv.members.toLocaleString()} участников`;
+
+  // Update overview
+  document.getElementById('ov-members').textContent = srv.members.toLocaleString();
+  document.getElementById('ov-channels').textContent = srv.channels;
+  document.getElementById('ov-cmds').textContent = Math.floor(Math.random() * 300 + 50);
+  document.getElementById('ov-violations').textContent = Math.floor(Math.random() * 15);
+  document.getElementById('ov-giveaways').textContent = Math.floor(Math.random() * 3);
+
+  showSection('overview');
+  toast(`Сервер: ${srv.name}`, '⚙️');
+}
+
+function backToServers() {
+  document.getElementById('server-picker-view').style.display = 'block';
+  document.getElementById('server-settings-view').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════
+//  SETTINGS SECTIONS
+// ═══════════════════════════════════════════════════
+function showSection(name) {
+  document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('act'));
+  document.getElementById('sec-' + name)?.classList.add('act');
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('act'));
+  document.querySelectorAll('.sidebar-link').forEach(l => {
+    if (l.getAttribute('onclick')?.includes(`'${name}'`)) l.classList.add('act');
+  });
+}
+
+function saveSetting(btn) {
+  const orig = btn.textContent;
   btn.textContent = '⏳ Сохранение...';
   btn.disabled = true;
   setTimeout(() => {
     btn.textContent = '✅ Сохранено!';
     btn.classList.add('saved');
-    showToast('Настройки сохранены! 💜');
+    toast('Настройки сохранены! 💜');
     setTimeout(() => {
-      btn.textContent = '💾 Сохранить настройки';
+      btn.textContent = orig;
       btn.classList.remove('saved');
       btn.disabled = false;
     }, 2500);
-  }, 800);
+  }, 700);
 }
 
-// ── KEYBOARD SHORTCUT ──
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('login-modal').classList.contains('active')) {
-    const input = document.getElementById('discord-input').value.trim();
-    if (input && document.getElementById('login-btn').disabled === false) simulateOAuth();
-    else if (input) checkProfile();
-  }
-  if (e.key === 'Escape') closeModal();
-});
+// ═══════════════════════════════════════════════════
+//  CUSTOM COMMANDS
+// ═══════════════════════════════════════════════════
+function saveCustomCmd() {
+  const trigger = document.getElementById('new-cmd-trigger').value.trim();
+  const response = document.getElementById('new-cmd-response').value.trim();
+  if (!trigger || !response) { toast('Заполните все поля', '⚠️'); return; }
+  const list = document.getElementById('custom-cmds-list');
+  const item = document.createElement('div');
+  item.className = 'custom-cmd-item';
+  const prefix = STATE.currentServer ? (STATE.servers.find(s=>s.id===STATE.currentServer.id)?.prefix || '!') : '!';
+  item.innerHTML = `<span class="cmd-trigger">${prefix}${trigger}</span><span class="cmd-response-preview">${response}</span><button class="btn btn-ghost btn-sm" onclick="editCmd(this)">✏️</button><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();toast('Команда удалена')">×</button>`;
+  list.appendChild(item);
+  closeModal('add-cmd-modal');
+  document.getElementById('new-cmd-trigger').value = '';
+  document.getElementById('new-cmd-response').value = '';
+  toast(`Команда !${trigger} создана!`, '✅');
+}
+
+function editCmd(btn) { toast('Редактирование команды скоро будет доступно', 'ℹ️'); }
+
+// ═══════════════════════════════════════════════════
+//  GIVEAWAY
+// ═══════════════════════════════════════════════════
+function createGiveaway() {
+  const prize = document.getElementById('gw-prize').value.trim();
+  const duration = document.getElementById('gw-duration').value.trim();
+  const winners = document.getElementById('gw-winners').value;
+  if (!prize || !duration) { toast('Заполните приз и время', '⚠️'); return; }
+  closeModal('create-gw-modal');
+  const list = document.getElementById('giveaways-list');
+  const item = document.createElement('div');
+  item.className = 'cmd-row';
+  item.style.marginBottom = '8px';
+  item.innerHTML = `<div style="flex:1"><div class="small" style="font-weight:600">🎁 ${prize}</div><div class="xs muted2">Заканчивается через ${duration} · ${winners} победителей · 0 участников</div></div><div class="flex gap-8"><button class="btn btn-secondary btn-sm" onclick="toast('Победители перевыбраны!')">Рерол</button><button class="btn btn-danger btn-sm" onclick="this.closest('.cmd-row').remove();toast('Конкурс завершён')">Завершить</button></div>`;
+  list.prepend(item);
+  toast(`Конкурс «${prize}» создан! 🎉`, '🎉');
+}
+
+// ═══════════════════════════════════════════════════
+//  MISC UTILS
+// ═══════════════════════════════════════════════════
+function removeTag(btn) { btn.parentElement.remove(); }
+function addTag(e) {
+  if (e.key !== 'Enter' && e.key !== ',') return;
+  e.preventDefault();
+  const input = e.target;
+  const val = input.value.replace(',','').trim().toLowerCase();
+  if (!val) return;
+  const wrap = document.getElementById('bad-words-wrap');
+  const tag = document.createElement('div');
+  tag.className = 'tag';
+  tag.innerHTML = `${val}<button class="tag-del" onclick="removeTag(this)">×</button>`;
+  wrap.insertBefore(tag, input);
+  input.value = '';
+}
+
+function addShopItem() {
+  const list = document.getElementById('shop-items-list');
+  const item = document.createElement('div');
+  item.className = 'shop-item-row';
+  item.innerHTML = `<span class="shop-item-emoji">🎁</span><div style="flex:1"><input class="set-input" placeholder="Название" style="width:100%;margin-bottom:4px"><input class="set-input" placeholder="Описание роли" style="width:100%"></div><input class="set-input" type="number" value="200" style="width:90px"><div class="tog on" onclick="this.classList.toggle('on')" style="margin-left:8px"></div>`;
+  list.appendChild(item);
+}
+
+function addLevelReward() {
+  const list = document.getElementById('level-rewards-list');
+  const item = document.createElement('div');
+  item.className = 'shop-item-row';
+  item.innerHTML = `<div style="flex:1"><span class="muted2 xs">Уровень</span><input class="set-input" type="number" value="20" style="width:60px;margin:0 8px"></div><div style="flex:2"><span class="muted2 xs">Роль</span><select class="set-select" style="margin-left:8px"><option>@Участник</option><option>@Активный</option><option>@VIP</option></select></div><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button>`;
+  list.appendChild(item);
+}
+
+function filterLogs(type, btn) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('act'));
+  btn.classList.add('act');
+  document.querySelectorAll('.log-item').forEach(l => {
+    l.style.display = (type === 'all' || l.dataset.type === type) ? 'flex' : 'none';
+  });
+}
+
+function selectColor(dot, color) {
+  document.querySelectorAll('.pal-dot').forEach(d => d.classList.remove('act'));
+  dot.classList.add('act');
+  toast(`Цвет выбран: ${color}`, '🎨');
+}
 </script>
 </body>
 </html>
